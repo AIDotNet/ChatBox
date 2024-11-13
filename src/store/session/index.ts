@@ -1,1 +1,2 @@
-export * from './store';
+export type { SessionStore } from './store';
+export { useSessionStore } from './store';

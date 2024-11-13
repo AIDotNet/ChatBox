@@ -1,6 +1,10 @@
 import UAParser from 'ua-parser-js';
 
+import { isOnServerSide } from '@/utils/env';
+
 export const getParser = () => {
+  if (isOnServerSide) return new UAParser('Node');
+
   let ua = navigator.userAgent;
   return new UAParser(ua);
 };
@@ -21,15 +25,8 @@ export const browserInfo = {
 
 export const isMacOS = () => getPlatform() === 'Mac OS';
 
-export const isArc = () => {
-  return (
-    window.matchMedia('(--arc-palette-focus: var(--arc-background-simple-color))').matches ||
-    Boolean('arc' in window || 'ArcControl' in window || 'ARCControl' in window) ||
-    Boolean(getComputedStyle(document.documentElement).getPropertyValue('--arc-palette-title'))
-  );
-};
-
 export const isInStandaloneMode = () => {
+  if (isOnServerSide) return false;
   return (
     window.matchMedia('(display-mode: standalone)').matches ||
     ('standalone' in navigator && (navigator as any).standalone === true)
@@ -37,6 +34,7 @@ export const isInStandaloneMode = () => {
 };
 
 export const isSonomaOrLaterSafari = () => {
+  if (isOnServerSide) return false;
 
   // refs: https://github.com/khmyznikov/pwa-install/blob/0904788b9d0e34399846f6cb7dbb5efeabb62c20/src/utils.ts#L24
   const userAgent = navigator.userAgent.toLowerCase();

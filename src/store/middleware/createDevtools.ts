@@ -1,6 +1,7 @@
 import { optionalDevtools } from 'zustand-utils';
 import { devtools as _devtools } from 'zustand/middleware';
 
+import { isDev } from '@/utils/env';
 
 export const createDevtools =
   (name: string): typeof _devtools =>
@@ -17,6 +18,6 @@ export const createDevtools =
     }
 
     return optionalDevtools(showDevtools)(initializer, {
-      name: `ChatBot_${name}` ,
+      name: `LobeChat_${name}` + (isDev ? '_DEV' : ''),
     });
   };

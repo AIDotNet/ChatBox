@@ -3,24 +3,31 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
+import { isDev } from '@/utils/env';
+
 import { createDevtools } from '../middleware/createDevtools';
-import { type SessionActionSlice, sessionActionSlice } from './action';
-import { type SessionState, initialSessionState } from './initialState';
+import { SessionStoreState, initialState } from './initialState';
+import { SessionAction, createSessionSlice } from './slices/session/action';
+import { SessionGroupAction, createSessionGroupSlice } from './slices/sessionGroup/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export type SessionStore = SessionState & SessionActionSlice;
+export interface SessionStore extends SessionAction, SessionGroupAction, SessionStoreState {}
 
 const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (...parameters) => ({
-  ...initialSessionState,
-  ...sessionActionSlice(...parameters),
+  ...initialState,
+  ...createSessionSlice(...parameters),
+  ...createSessionGroupSlice(...parameters),
 });
 
-//  ===============  实装 useStore ============ //
-
-const devtools = createDevtools('global');
+//  ===============  implement useStore ============ //
+const devtools = createDevtools('session');
 
 export const useSessionStore = createWithEqualityFn<SessionStore>()(
-  subscribeWithSelector(devtools(createStore)),
+  subscribeWithSelector(
+    devtools(createStore, {
+      name: 'LobeChat_Session' + (isDev ? '_DEV' : ''),
+    }),
+  ),
   shallow,
 );
