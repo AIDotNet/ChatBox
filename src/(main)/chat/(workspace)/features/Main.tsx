@@ -1,5 +1,3 @@
-'use client';
-
 import { Skeleton } from 'antd';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { parseAsBoolean, useQueryState } from 'nuqs';
@@ -12,8 +10,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import Tags from './Tags';
-import ActionIcon from '@/components/ActionIcon';
-import Avatar from '@/components/Avatar';
+import { ActionIcon, Avatar } from '@lobehub/ui';
 
 const Main = memo(() => {
 

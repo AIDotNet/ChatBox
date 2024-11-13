@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@lobehub/emojilib": "^1.0.0",
+    "@lobehub/ui": "^1.152.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-shell": "^2",
     "@types/node": "^22.9.0",

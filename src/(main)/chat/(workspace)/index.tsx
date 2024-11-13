@@ -1,7 +1,7 @@
 import { Flexbox } from 'react-layout-kit';
-import ChatHeader from './features/ChatHeader';
 // import Portal from './features/Portal';
 import Conversation from './(conversation)';
+import ChatHeader from './features/ChatHeader';
 
 // import Portal from './Portal';
 

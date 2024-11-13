@@ -1,6 +1,4 @@
-
-import ChatHeader from '@/components/ChatHeader';
-// import HeaderAction from './HeaderAction';
+import { ChatHeader } from '@lobehub/ui';
 import Main from './Main';
 
 const Header = () => {

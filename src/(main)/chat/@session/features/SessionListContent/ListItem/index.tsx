@@ -1,10 +1,7 @@
+import { Avatar, List, ListItemProps } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { createStyles } from 'antd-style';
 import { memo, useMemo, useRef } from 'react';
-
-import Avatar from '@/components/Avatar';
-import List, { ListItemProps } from '@/components/List';
-
 const { Item } = List;
 
 const useStyles = createStyles(({ css, token }) => {

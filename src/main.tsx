@@ -13,7 +13,7 @@ try {
 
     function onTrayClick(item: string) {
       if (item === "quit") {
-        getCurrentWindow()
+        getCurrentWindow().close();
       }
     }
 

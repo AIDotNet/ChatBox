@@ -1,5 +1,5 @@
-import DraggablePanel from '@/components/DraggablePanel';
-import DraggablePanelContainer from '@/components/DraggablePanel/components/DraggablePanelContainer';
+
+import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { rgba } from 'polished';
 import { PropsWithChildren, memo } from 'react';

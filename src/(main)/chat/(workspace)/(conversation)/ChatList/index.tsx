@@ -4,7 +4,9 @@ import { Flexbox } from 'react-layout-kit';
 
 const ChatList = memo(()=>{
     return (
-        <Flexbox>
+        <Flexbox style={{
+            flex: 1,
+        }}>
             ChatList
         </Flexbox>
     )    

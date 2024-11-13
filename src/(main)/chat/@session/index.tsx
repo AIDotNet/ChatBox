@@ -1,5 +1,3 @@
-import ActionIcon from "@/components/ActionIcon";
-import DraggablePanel from "@/components/DraggablePanel";
 import { useActionSWR } from "@/libs/swr";
 import { useSessionStore } from "@/store/session";
 import { useResponsive, createStyles } from "antd-style";
@@ -9,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import SkeletonList from "./features/SkeletonList";
 import { useGlobalStore } from "@/store/global";
 import { systemStatusSelectors } from "@/store/global/selectors";
+import { ActionIcon, DraggablePanel } from "@lobehub/ui";
 
 export const useStyles = createStyles(({ css, token }) => ({
     logo: css`

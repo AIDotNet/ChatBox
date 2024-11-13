@@ -3,12 +3,11 @@ import { Flexbox } from 'react-layout-kit';
 import { Avatar, Divider } from "antd";
 import { Github, MessageSquare } from "lucide-react";
 import { useGlobalStore } from "../store/global/store";
-import SideNav from "../components/SideNav";
-import ActionIcon from "../components/ActionIcon";
 import { SidebarTabKey } from "@/store/global/initialState";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useActiveTabKey } from "@/hooks";
 import {GITHUB} from "@/const/url.ts";
+import { ActionIcon, SideNav } from "@lobehub/ui";
 
 const MainLayout = memo(() => {
     const [activeTabKey, switchActiveTabKey] = useGlobalStore(state => [useActiveTabKey(), state.switchActiveTabKey]);

@@ -14,12 +14,12 @@
     "windows": [
       {
         "title": "Chat Bot",
-        "width": 800,
-        "height": 650,
+        "width": 880,
+        "height": 700,
         "decorations": false,
         "center": true,
-        "minHeight": 650,
-        "minWidth": 800
+        "minHeight": 700,
+        "minWidth": 880
       }
     ],
     "security": {
@@ -33,7 +33,6 @@
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
-      "icons/icon.icns",
       "icons/icon.ico"
     ]
   }
