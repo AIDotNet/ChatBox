@@ -1,0 +1,40 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
+             xmlns:controls="clr-namespace:ChatBox.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ChatBox.Controls.Model"
+             x:DataType="viewModels:ChatViewModel">
+
+    <Design.DataContext>
+        <viewModels:ChatViewModel />
+    </Design.DataContext>
+
+    <ComboBox
+        SelectedValue="{Binding ModelId}"
+        ItemsSource="{Binding Models}"
+        Name="ModelComboBox"
+        Height="27"
+        SelectedIndex="0"
+        Margin="0,0,0,0">
+        <ComboBox.ItemTemplate>
+            <DataTemplate>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Border Width="16"
+                            Height="16"
+                            Margin="0,0,5,0"
+                            CornerRadius="50"
+                            ClipToBounds="True">
+                        <Image Source="{Binding Icon,Converter={StaticResource ModelIconConvertor}}"
+                               Stretch="UniformToFill" />
+                    </Border>
+                    <TextBlock
+                        FontSize="12"
+                        Grid.Column="1" Text="{Binding DisplayName}" FontFamily="{Binding}" />
+                </Grid>
+            </DataTemplate>
+        </ComboBox.ItemTemplate>
+    </ComboBox>
+</UserControl>

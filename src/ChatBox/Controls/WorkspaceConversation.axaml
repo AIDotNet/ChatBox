@@ -1,0 +1,82 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
+             xmlns:controls="clr-namespace:ChatBox.Controls"
+             xmlns:models="clr-namespace:ChatBox.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ChatBox.Controls.WorkspaceConversation"
+             x:DataType="viewModels:ChatViewModel">
+
+    <UserControl.Resources>
+        <models:RoleConstant x:Key="RoleConstant" />
+    </UserControl.Resources>
+    <Design.DataContext>
+        <viewModels:ChatViewModel />
+    </Design.DataContext>
+
+    <Grid
+        ColumnDefinitions="*">
+        <ScrollViewer
+            Name="ScrollViewer"
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl
+                ItemsSource="{Binding Messages}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*">
+                            <Grid
+                                ColumnDefinitions="*,Auto"
+                                IsVisible="{Binding Role,ConverterParameter={x:Static models:RoleConstant.RoleUser},Converter={StaticResource WorkspacePanelConvertor}}">
+                                <controls:ChatRender
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Right"
+                                    DataContext="{Binding This}"
+                                    CopyClicked="ChatRender_OnCopyClicked"
+                                    EditClicked="ChatRender_OnEditClicked"
+                                    DeleteClicked="ChatRender_OnDeleteClicked"
+                                    ReGenerateClicked="ChatRender_OnReGenerateClicked"
+                                    Margin="16"
+                                    Grid.Column="0" />
+                                <controls:ChatEdit Grid.Column="0"
+                                                   OkClicked="ChatEdit_OnOkClicked"
+                                                   CancelClicked="ChatEdit_OnCancelClicked"
+                                                   Margin="16"
+                                                   DataContext="{Binding This}"/>
+                                <controls:Avatar Grid.Column="1" Source="../Assets/favicon.ico" />
+                            </Grid>
+                            <Grid
+                                ColumnDefinitions="Auto,*"
+                                IsVisible="{Binding Role,ConverterParameter={x:Static models:RoleConstant.RoleAssistant},
+                            Converter={StaticResource WorkspacePanelConvertor}}">
+                                <controls:Avatar
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Left"
+                                    Source="../Assets/favicon.ico" />
+                                <controls:ChatRender
+                                    DataContext="{Binding This}"
+                                    VerticalAlignment="Top"
+                                    CopyClicked="ChatRender_OnCopyClicked"
+                                    EditClicked="ChatRender_OnEditClicked"
+                                    ReGenerateClicked="ChatRender_OnReGenerateClicked"
+                                    DeleteClicked="ChatRender_OnDeleteClicked"
+                                    HorizontalAlignment="Left"
+                                    Margin="16"
+                                    Grid.Column="1" />
+                                <controls:ChatEdit Grid.Column="1"
+                                                   Margin="16"
+                                                   OkClicked="ChatEdit_OnOkClicked"
+                                                   CancelClicked="ChatEdit_OnCancelClicked"
+                                                   DataContext="{Binding This}" />
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <controls:ChatWelcome IsVisible="{Binding WelcomeVisible}" />
+    </Grid>
+
+</UserControl>

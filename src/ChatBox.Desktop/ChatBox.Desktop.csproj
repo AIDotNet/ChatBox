@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFrameworks>net9.0;net9.0-windows</TargetFrameworks>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationIcon>logo.ico</ApplicationIcon>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+        <PublishAot>false</PublishAot>
+        <IncludeNativeLibrariesForSelfExtract>false</IncludeNativeLibrariesForSelfExtract>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0-windows'))">
+        <IsTrimmable>false</IsTrimmable>
+        <PublishTrimmed>false</PublishTrimmed>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ChatBox\ChatBox.csproj"/>
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="Roots.xml" />
+        <Content Include="logo.ico" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <None Remove="favicon.ico" />
+    </ItemGroup>
+</Project>

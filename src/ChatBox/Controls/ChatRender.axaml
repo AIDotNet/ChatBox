@@ -1,0 +1,87 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:ChatBox.ViewModels"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:markdownRender="clr-namespace:MarkdownAIRender.Controls.MarkdownRender;assembly=MarkdownAIRender"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             IsVisible="{Binding !IsEditing}"
+             x:Class="ChatBox.Controls.ChatRender"
+             x:DataType="vm:ChatMessageListViewModel">
+
+    <UserControl.DataContext>
+        <vm:ChatMessageListViewModel />
+    </UserControl.DataContext>
+
+    <Grid RowDefinitions="*,Auto,50">
+        <markdownRender:MarkdownRender
+            CodeToolRenderEvent="RenderControl_OnCodeToolRenderEvent"
+            Value="{Binding Content}"
+            Name="RenderControl">
+        </markdownRender:MarkdownRender>
+        <controls:ProgressRing Grid.Row="0"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Left"
+                               IsVisible="{Binding Content,
+            ConverterParameter={x:True},Converter={StaticResource NullToVisibilityConverter}}"
+                               Width="20" Height="20" />
+
+        <Border
+            IsVisible="{Binding Plugin, Converter={StaticResource NullToVisibilityConverter}}"
+            Grid.Row="1"
+            BorderThickness="1"
+            CornerRadius="4"
+            Padding="8"
+            Background="Gray"
+            Margin="8,8,8,8">
+            <TextBlock
+                TextWrapping="Wrap">
+                <Run Text="执行插件："></Run>
+                <Run Text="{Binding Plugin.Name}"></Run>
+                <Run Text="（"></Run>
+                <Run Text="{Binding Plugin.Description}"></Run>
+                <Run Text="）"></Run>
+                <Run Text="  "></Run>
+                <Run Text="参数："></Run>
+                <Run Text="{Binding Plugin.Arguments}"></Run>
+            </TextBlock>
+        </Border>
+        <Grid
+            ColumnDefinitions="Auto,Auto,Auto,Auto,*"
+            Grid.Row="2">
+            <Button
+                ToolTip.Tip="删除当前消息"
+                Margin="8,0,5,0"
+                Click="DeleteButton_Click">
+                <controls:SymbolIcon
+                    Foreground="Red"
+                    Symbol="Delete" />
+            </Button>
+            <Button
+                Grid.Column="1" Margin="0,0,8,0"
+                ToolTip.Tip="复制当前消息"
+                Click="CopyButton_Click">
+                <controls:SymbolIcon
+                    Symbol="Copy" Width="15">
+                </controls:SymbolIcon>
+            </Button>
+            <Button
+                Grid.Column="2" Margin="0,0,8,0"
+                ToolTip.Tip="编辑当前消息"
+                Click="EditButton_Click">
+                <controls:SymbolIcon
+                    Symbol="Edit" Width="15">
+                </controls:SymbolIcon>
+            </Button>
+            <Button
+                Grid.Column="3" Margin="0,0,8,0"
+                ToolTip.Tip="重新生成"
+                Click="ReGenerate_Click">
+                <controls:SymbolIcon
+                    Symbol="Refresh" Width="15">
+                </controls:SymbolIcon>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

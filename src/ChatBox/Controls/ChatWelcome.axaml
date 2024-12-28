@@ -1,0 +1,17 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ChatBox.Controls.ChatWelcome">
+    <Grid>
+        <TextBlock
+            FontSize="24"
+            Margin="0,60,0,0"
+            VerticalAlignment="Center"
+            TextWrapping="Wrap"
+            HorizontalAlignment="Center">
+            嗨🖖，我是 AI Chat！欢迎使用AI Chat！
+        </TextBlock>
+    </Grid>
+</UserControl>

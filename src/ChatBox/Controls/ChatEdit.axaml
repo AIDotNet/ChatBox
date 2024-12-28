@@ -1,0 +1,43 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:ChatBox.ViewModels"
+             xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             IsVisible="{Binding IsEditing}"
+             x:Class="ChatBox.Controls.ChatEdit"
+             x:DataType="vm:ChatMessageListViewModel">
+    
+    <UserControl.DataContext>
+        <viewModels:ChatMessageListViewModel />
+    </UserControl.DataContext>
+    
+    <StackPanel>
+        <TextBox
+            Watermark="编辑消息"
+            TextWrapping="WrapWithOverflow"
+            Height="300"
+            AcceptsReturn="True"
+            Text="{Binding Content}"
+        ></TextBox>
+        <Grid ColumnDefinitions="*,Auto,Auto">
+            <Button 
+                Height="25"
+                FontSize="10"
+                Margin="5"
+                Click="OkClick"
+                Grid.Column="1">
+                确认
+            </Button>
+            <Button 
+                Margin="5"
+                FontSize="10"
+                Click="CancelClick"
+                Height="25" Grid.Column="2">
+                取消
+            </Button>
+        </Grid>
+    </StackPanel>
+    
+</UserControl>

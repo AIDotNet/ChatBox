@@ -1,0 +1,93 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:controls1="clr-namespace:ChatBox.Controls"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="210"
+             x:Class="ChatBox.Controls.ChatInput"
+             x:DataType="viewModels:ChatViewModel">
+    <Design.DataContext>
+        <viewModels:ChatViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="38,*,Auto,52">
+        <controls1:ActionBar
+            DeleteClick="DeleteButton_Click" />
+        <TextBox Watermark="Ask me anything, I'm here to help!"
+                 AcceptsReturn="True"
+                 Height="130"
+                 TextWrapping="WrapWithOverflow"
+                 Text="{Binding Message, Mode=TwoWay}"
+                 Grid.Row="1" Grid.Column="0" />
+        <Border Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Files}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#343434"
+                                Padding="2"
+                                CornerRadius="5" Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="10" Text="{Binding Name}" VerticalAlignment="Center" />
+                                <Button
+                                    Height="20"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    CornerRadius="20"
+                                    BorderThickness="0"
+                                    Click="DeleteFile" Tag="{Binding This}" Margin="5,0,0,0">
+                                    <controls:SymbolIcon
+                                        Symbol="Delete" FontSize="10" Width="10" />
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+        <Border Padding="5" Grid.Row="3">
+            <Grid ColumnDefinitions="Auto,Auto,*">
+                <Button
+                    Click="OpenFile">
+                    <controls:SymbolIcon
+                        Symbol="OpenFile" Width="15">
+                    </controls:SymbolIcon>
+                </Button>
+                <Grid ColumnDefinitions="*,Auto,Auto" Grid.Column="2">
+                    <Button Click="Submit"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            IsEnabled="{Binding !IsGenerating}"
+                            Background="Transparent"
+                            Margin="0,0,5,0"
+                            BorderBrush="Transparent">
+                        <WrapPanel>
+                            <TextBlock>submit</TextBlock>
+                            <controls:ProgressRing IsVisible="{Binding IsGenerating}" Width="20" Height="20" />
+                        </WrapPanel>
+                    </Button>
+                    <Button Grid.Column="1"
+                            Click="AgentSubmit"
+                            IsEnabled="{Binding !IsGenerating}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            Background="Transparent"
+                            BorderBrush="Transparent">
+                        <WrapPanel>
+                            <TextBlock>agent</TextBlock>
+                            <controls:ProgressRing IsVisible="{Binding IsGenerating}" Width="20" Height="20" />
+                        </WrapPanel>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,25 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sty="using:FluentAvalonia.Styling"
+             xmlns:convertors="clr-namespace:ChatBox.Convertors"
+             x:Class="ChatBox.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://ChatBox/Styling/Resources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <convertors:WorkspacePanelConvertor x:Key="WorkspacePanelConvertor" />
+            <convertors:WorkspaceEditConvertor x:Key="WorkspaceEditConvertor" />
+            <convertors:ModelIconConvertor x:Key="ModelIconConvertor"></convertors:ModelIconConvertor>
+            <convertors:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+    
+    
+
+    <Application.Styles>
+        <sty:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
+        <StyleInclude Source="avares://ChatBox/Styling/ControlsGalleryStyles.axaml" />
+        <StyleInclude Source="avares://MarkdownAIRender/Index.axaml" />
+    </Application.Styles>
+</Application>

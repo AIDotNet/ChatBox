@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.2.3" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="Dapper" Version="2.1.35" />
+        <PackageReference Include="Dapper.AOT" Version="1.0.31" />
+        <PackageReference Include="FluentAvaloniaUI" Version="2.2.0" />
+        <PackageReference Include="MarkdownAIRender" Version="0.1.8" />
+<!--        <PackageReference Include="MarkdownAIRender" Version="0.1.6" />-->
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.32.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.32.0-alpha" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.32.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.32.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.32.0-alpha" />
+        <PackageReference Include="SharpToken" Version="2.0.3" />
+		<PackageReference Include="Markdig" Version="0.39.1" />
+		<PackageReference Include="Markdig.SyntaxHighlighting" Version="1.1.7" />
+		<PackageReference Include="MarkdigExtensions.SyntaxHighlighting" Version="1.0.3" />
+		<PackageReference Include="MarkdigExtensions.UrlRewriter" Version="1.0.0" />
+        <PackageReference Include="Whyse.Markdig.Slack" Version="1.0.978" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="models.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="system.md">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Controls\ActionBar\ActionBar.axaml.cs">
+        <DependentUpon>ActionBar.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Controls\RenderMarkdown\RenderMarkdown.axaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\..\Avalonia\Markdown.AIRender\src\MarkdownAIRender\MarkdownAIRender.csproj" />
+      <ProjectReference Include="..\ChatBox.Logger\ChatBox.Logger.csproj" />
+    </ItemGroup>
+</Project>
