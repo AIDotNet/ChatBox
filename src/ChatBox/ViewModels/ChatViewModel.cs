@@ -7,7 +7,7 @@ using ChatBox.Models;
 
 namespace ChatBox.ViewModels;
 
-public class ChatViewModel : ViewModelBase
+public class ChatViewModel : ModelListViewModel
 {
 	public ChatViewModel()
 	{
@@ -38,29 +38,6 @@ public class ChatViewModel : ViewModelBase
 		}
 	}
 
-	private ModelDto _modelId;
-
-	public ModelDto ModelId
-	{
-		get => _modelId;
-		set
-		{
-			SetProperty(ref _modelId, value);
-			ModelIdChanged?.Invoke(value);
-		}
-	}
-
-	public Action<ModelDto> ModelIdChanged { get; set; }
-
-
-	private ObservableCollection<ModelDto> _models = new();
-
-
-	public ObservableCollection<ModelDto> Models
-	{
-		get => _models;
-		set => SetProperty(ref _models, value);
-	}
 
 	private string _sessionId = "default";
 

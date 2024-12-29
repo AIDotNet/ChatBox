@@ -28,6 +28,14 @@ public partial class MainView : UserControl
 
         DataContext = HostApplication.Services.GetRequiredService<MainViewModel>();
         _settingService = HostApplication.Services.GetRequiredService<SettingService>();
+        
+        HostApplication.Logout += () =>
+        {
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                ViewModel.IsLogin = false;
+            });
+        };
     }
 
     private MainViewModel ViewModel => (MainViewModel)DataContext;

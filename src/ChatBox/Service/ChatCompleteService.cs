@@ -45,8 +45,6 @@ public class ChatCompleteService(SettingService settingService, TokenService tok
         string content, string modelId, string targetLanguage)
     {
         var setting = settingService.LoadSetting();
-        var model = tokenService.LoadModels().FirstOrDefault(x => x.Id == modelId);
-
         var kernel = KernelFactory.GetKernel(setting.ApiKey, modelId, setting.Type);
 
         var chatComplete = kernel.GetRequiredService<IChatCompletionService>();
@@ -55,7 +53,7 @@ public class ChatCompleteService(SettingService settingService, TokenService tok
 
         chatHistory.AddUserMessage(
             @"
-是一名精通全世界语言的语言专家，你需要识别用户输入的内容，以国际标准 locale 进行输出，你需要将用户输入的内容翻译成目标语言，目标语言是 {targetLanguage}，请将翻译后的内容输出到聊天框中。
+是一名精通全世界语言的语言专家，你需要识别用户输入的内容，你需要将用户输入的直译成{targetLanguage} 需要,请确保翻译准确无误，符合语境并保持流畅自然的语言表达，不要回复和解释，只需要翻译内容,格式与原文保持一致
 ".Replace("{targetLanguage}", targetLanguage));
         chatHistory.AddUserMessage(content);
 

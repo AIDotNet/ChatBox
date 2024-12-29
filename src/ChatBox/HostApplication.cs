@@ -11,6 +11,12 @@ namespace ChatBox;
 public class HostApplication
 {
 	private static IServiceProvider _serviceProvider = null!;
+	
+	/// <summary>
+	/// 退出登录
+	/// </summary>
+	/// <returns></returns>
+	public static Action Logout { get; set; } = null!;
 
 	public static IServiceProvider Services => _serviceProvider;
 

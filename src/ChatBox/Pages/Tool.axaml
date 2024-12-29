@@ -3,14 +3,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:controls1="clr-namespace:ChatBox.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ChatBox.Pages.Tool">
-    
+             x:Class="ChatBox.Pages.Tool"
+             x:DataType="viewModels:ToolViewModel">
+
     <Design.DataContext>
         <viewModels:ToolViewModel />
     </Design.DataContext>
 
-    
+
     <StackPanel Margin="20">
         <!-- Title -->
         <TextBlock Text="翻译工具"
@@ -23,41 +26,54 @@
         <TextBox Name="OriginalTextBox"
                  Watermark="请输入原文..."
                  AcceptsReturn="True"
-                 Text=""
+                 Text="{Binding OriginalText}"
                  TextWrapping="WrapWithOverflow"
-                 Height="100"
+                 Height="180"
                  Margin="0,0,0,10" />
 
         <!-- Language Selection and Translate Button in the same row -->
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Margin="0,0,0,10">
-            <!-- Language Selection -->
+            <controls1:Model
+                Margin="0,4,5,0"
+                Grid.Column="0">
+            </controls1:Model>
             <ComboBox Name="LanguageComboBox"
                       SelectedIndex="0"
+                      SelectedItem="{Binding TranslatedLanguageModel}"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Right"
+                      ItemsSource="{Binding TranslatedLanguages}"
                       Margin="0,0,10,0">
-                <ComboBoxItem Content="中文" />
-                <ComboBoxItem Content="英文" />
-                <ComboBoxItem Content="法文" />
-                <ComboBoxItem Content="德文" />
-                <ComboBoxItem Content="日文" />
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="Auto,*">
+                            <TextBlock
+                                FontSize="12"
+                                Grid.Column="1" Text="{Binding Language}" FontFamily="{Binding}" />
+                        </Grid>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
 
             <!-- Translate Button -->
             <Button Name="TranslateButton"
-
+                    IsEnabled="{Binding !IsLoading}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Right"
-                    Content="翻译"
                     Width="100"
-                    Click="TranslateButton_Click" />
+                    Click="TranslateButton_Click">
+                <WrapPanel>
+                    <TextBlock>submit</TextBlock>
+                    <controls:ProgressRing IsVisible="{Binding IsLoading}" Width="20" Height="20" />
+                </WrapPanel>
+            </Button>
         </StackPanel>
 
         <!-- Translated Text Display -->
         <SelectableTextBlock Name="TranslatedTextBlock"
-                             Text="翻译内容将在这里显示"
+                             Text="{Binding TranslatedText}"
                              FontSize="16"
                              TextWrapping="Wrap"
                              Margin="0,0,0,10" />

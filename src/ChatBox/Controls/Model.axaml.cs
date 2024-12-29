@@ -20,7 +20,7 @@ public partial class Model : UserControl
 		GetToken();
 	}
 
-	private ChatViewModel ViewModel => (ChatViewModel)DataContext;
+	private ModelListViewModel ViewModel => (ModelListViewModel)DataContext;
 
 	public void GetToken()
 	{

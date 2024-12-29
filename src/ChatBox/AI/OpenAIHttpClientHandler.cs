@@ -1,9 +1,7 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
+﻿using System.Net;
+using System.Net.Http;
 using System.Threading;
+using ChatBox.Service;
 
 namespace ChatBox.AI;
 
@@ -12,14 +10,18 @@ public class OpenAIHttpClientHandler : HttpClientHandler
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        // var json = JsonSerializer.Deserialize<object>(await request.Content.ReadAsStringAsync(cancellationToken));
-        //
-        // request.Content = new StringContent(JsonSerializer.Serialize(json, new JsonSerializerOptions
-        // {
-        //     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-        // }), Encoding.UTF8, "application/json");
-
         var response = await base.SendAsync(request, cancellationToken);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            // 如果返回401，清空ApiKey
+            var settings = HostApplication.Services.GetRequiredService<SettingService>().LoadSetting();
+
+            settings.ApiKey = string.Empty;
+            HostApplication.Services.GetRequiredService<SettingService>().SaveSetting(settings);
+
+            HostApplication.Logout?.Invoke();
+        }
 
         return response;
     }
