@@ -191,7 +191,7 @@ public partial class WorkspaceConversation : UserControl
                 ViewModel.OnMessageUpdated?.Invoke();
                 var isfirst = true;
                 var autoCallTool = false;
-
+                var isInference = false;
                 if (ViewModel.CurrentModel.Equals("Chat", StringComparison.OrdinalIgnoreCase))
                 {
                     autoCallTool = false;
@@ -200,65 +200,99 @@ public partial class WorkspaceConversation : UserControl
                 {
                     autoCallTool = true;
                 }
-
-                await foreach (var item in chatCompleteService.GetChatComplete(newMessage, ViewModel.ModelId.Id,
-                                   autoCallTool,
-                                   ViewModel.Files.ToArray()))
+                else if (ViewModel.CurrentModel.Equals("inference", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (isfirst)
-                    {
-                        bot.Content = string.Empty;
-                        botView.Content = string.Empty;
-                        isfirst = false;
-                    }
+                    isInference = true;
+                }
 
-                    foreach (var x in item.Items)
+
+                var model = ViewModel.ModelId.Id;
+                var files = ViewModel.Files.ToArray();
+
+                _ = Task.Run(async () =>
+                {
+                    await foreach (var item in chatCompleteService.GetChatComplete(newMessage, model,
+                                       autoCallTool, files, isInference))
                     {
-                        if (x is StreamingFunctionCallUpdateContent callUpdateContent)
+                        if (isfirst)
                         {
-                            var plugin = chatCompleteService.GetPlugin(ViewModel.ModelId.Id, callUpdateContent.Name);
-                            if (plugin != null)
+                            Dispatcher.UIThread.Invoke(() =>
                             {
-                                bot.Plugin = plugin;
-                                bot.Plugin.Arguments = callUpdateContent.Arguments ?? string.Empty;
-                                botView.Plugin = new()
-                                {
-                                    Name = bot.Plugin.Name,
-                                    Description = bot.Plugin.Description,
-                                    Arguments = bot.Plugin.Arguments
-                                };
-                                ;
-                            }
-                            else if (plugin == null && bot.Plugin != null)
+                                bot.Content = string.Empty;
+                                botView.Content = string.Empty;
+                            });
+                        }
+
+                        int token = 0;
+                        foreach (var x in item.Items)
+                        {
+                            if (x is StreamingFunctionCallUpdateContent callUpdateContent)
                             {
-                                bot.Plugin.Arguments += callUpdateContent.Arguments ?? string.Empty;
-                                botView.Plugin = new()
+                                var plugin = chatCompleteService.GetPlugin(model, callUpdateContent.Name);
+                                if (plugin != null)
                                 {
-                                    Name = bot.Plugin.Name,
-                                    Description = bot.Plugin.Description,
-                                    Arguments = bot.Plugin.Arguments
-                                };
+                                    bot.Plugin = plugin;
+                                    bot.Plugin.Arguments = callUpdateContent.Arguments ?? string.Empty;
+                                    Dispatcher.UIThread.Invoke(() =>
+                                    {
+                                        botView.Plugin = new()
+                                        {
+                                            Name = bot.Plugin.Name,
+                                            Description = bot.Plugin.Description,
+                                            Arguments = bot.Plugin.Arguments
+                                        };
+                                    });
+                                }
+                                else if (plugin == null && bot.Plugin != null)
+                                {
+                                    bot.Plugin.Arguments += callUpdateContent.Arguments ?? string.Empty;
+
+                                    Dispatcher.UIThread.Invoke(() =>
+                                    {
+                                        botView.Plugin = new()
+                                        {
+                                            Name = bot.Plugin.Name,
+                                            Description = bot.Plugin.Description,
+                                            Arguments = bot.Plugin.Arguments
+                                        };
+                                    });
+                                }
                             }
+                        }
+
+                        bot.Content += item.Content;
+
+                        token++;
+                        if (token == 4 || isfirst)
+                        {
+                            Dispatcher.UIThread.Invoke(() => { botView.Content = bot.Content; });
+                            isfirst = false;
+                        }
+                        else if (token == 7)
+                        {
+                            token = 0;
+                            Dispatcher.UIThread.Invoke(() =>
+                            {
+                                botView.Content = bot.Content;
+
+                                ViewModel.OnMessageUpdated?.Invoke();
+                            });
                         }
                     }
 
-                    bot.Content += item.Content;
-                    botView.Content += item.Content;
-                    ViewModel.OnMessageUpdated?.Invoke();
-                }
-
-                Dispatcher.UIThread.Invoke(() => { ViewModel.OnMessageUpdated?.Invoke(); });
-
-                await _chatMessageRepository.InsertAsync(bot);
+                    Dispatcher.UIThread.Invoke(() =>
+                    {
+                        botView.Content = bot.Content;
+                        ViewModel.OnMessageUpdated?.Invoke();
+                        ViewModel.IsGenerating = false;
+                    });
+                    await _chatMessageRepository.InsertAsync(bot);
+                });
             }
             catch (Exception exception)
             {
                 _notificationManager?.Show(
                     new Notification("错误", exception.Message, NotificationType.Error));
-            }
-            finally
-            {
-                ViewModel.IsGenerating = false;
             }
         }
     }

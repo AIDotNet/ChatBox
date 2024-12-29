@@ -153,7 +153,6 @@ public partial class ChatInput : UserControl
                         {
                             bot.Content = string.Empty;
                             botView.Content = string.Empty;
-                            isfirst = false;
                         });
                     }
 
@@ -197,9 +196,10 @@ public partial class ChatInput : UserControl
                     bot.Content += item.Content;
 
                     token++;
-                    if (token == 4)
+                    if (token == 4 || isfirst)
                     {
                         Dispatcher.UIThread.Invoke(() => { botView.Content = bot.Content; });
+                        isfirst = false;
                     }
                     else if (token == 7)
                     {
@@ -217,6 +217,7 @@ public partial class ChatInput : UserControl
                 {
                     botView.Content = bot.Content;
                     ViewModel.OnMessageUpdated?.Invoke();
+                    ViewModel.IsGenerating = false;
                 });
                 await chatMessageRepository.InsertAsync(bot);
             });
@@ -226,15 +227,6 @@ public partial class ChatInput : UserControl
             _notificationManager?.Show(
                 new Notification("错误", e.Message, NotificationType.Error));
         }
-        finally
-        {
-            ViewModel.IsGenerating = false;
-        }
-    }
-
-    private async void AgentSubmit(object? sender, RoutedEventArgs e)
-    {
-        await SendChatMessage(true);
     }
 
     private async void Submit(object? sender, RoutedEventArgs e)

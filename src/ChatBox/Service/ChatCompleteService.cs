@@ -122,7 +122,13 @@ This is the complete code
         {
             var autoGptClient = KernelFactory.GetClient(modelId, setting.ApiKey);
 
-            var chatMessages = new List<OpenAI.Chat.ChatMessage>();
+            var chatMessages = new List<OpenAI.Chat.ChatMessage>(messages.Count() +1)
+            {
+                new UserChatMessage()
+                {
+                    Content = { "请使用中文输出推理步骤" }
+                }
+            };
             float? temperature = null;
 
             if (files.Length > 0)
@@ -176,7 +182,7 @@ This is the complete code
                 if (make.Type == MakeResultDto.MakeResultType.Step)
                 {
                     yield return new StreamingChatMessageContent(AuthorRole.Assistant,
-                        make.Content = "> " + make.Title + Environment.NewLine + "> " +
+                        make.Content = "> " +
                                        make.Content?.Replace("\n", "\n> ") + Environment.NewLine);
                 }
                 else if (make.Type == MakeResultDto.MakeResultType.FinalAnswer)
