@@ -1,27 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFrameworks>net9.0;net9.0-windows</TargetFrameworks>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0-macos</TargetFramework>
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationIcon>logo.ico</ApplicationIcon>
-    </PropertyGroup>
-    
-    <PropertyGroup>
+        <ApplicationId>com.aidotnet.chatbox</ApplicationId>
         <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
         <PublishAot>false</PublishAot>
         <IncludeNativeLibrariesForSelfExtract>false</IncludeNativeLibrariesForSelfExtract>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+        <RootNamespace>ChatBox.Desktop</RootNamespace>
     </PropertyGroup>
 
-    <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0-windows'))">
-        <IsTrimmable>false</IsTrimmable>
-        <PublishTrimmed>false</PublishTrimmed>
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <TargetFrameworks>net9.0;net9.0-macos</TargetFrameworks>
     </PropertyGroup>
     
-    <PropertyGroup>
-        <ApplicationManifest>app.manifest</ApplicationManifest>
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3" />
@@ -40,8 +35,6 @@
 
     <ItemGroup>
       <None Remove="favicon.ico" />
-      <None Update="models.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+      <BundleResource Include="models.json" />
     </ItemGroup>
 </Project>

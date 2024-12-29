@@ -66,10 +66,9 @@
                         VerticalAlignment="Center"
                         IsEnabled="{Binding !IsGenerating}"
                         HorizontalAlignment="Right"
-                        SelectedValue="{Binding CurrentModel}"
+                        SelectedItem="{Binding CurrentModel}"
                         ItemsSource="{Binding ModelList}"
                         Name="ModelComboBox"
-                        SelectedIndex="0"
                         Margin="0,5,0,0">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
