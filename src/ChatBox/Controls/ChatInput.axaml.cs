@@ -231,15 +231,15 @@ public partial class ChatInput : UserControl
 
     private async void Submit(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel.CurrentModel.Equals("Chat", StringComparison.OrdinalIgnoreCase))
+        if (ViewModel.CurrentModel.Key.Equals("Chat", StringComparison.OrdinalIgnoreCase))
         {
             await SendChatMessage();
         }
-        else if (ViewModel.CurrentModel.Equals("Agent", StringComparison.OrdinalIgnoreCase))
+        else if (ViewModel.CurrentModel.Key.Equals("Agent", StringComparison.OrdinalIgnoreCase))
         {
             await SendChatMessage(true);
         }
-        else if (ViewModel.CurrentModel.Equals("inference", StringComparison.OrdinalIgnoreCase))
+        else if (ViewModel.CurrentModel.Key.Equals("inference", StringComparison.OrdinalIgnoreCase))
         {
             await SendChatMessage(isInference: true);
         }

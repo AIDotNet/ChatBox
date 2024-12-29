@@ -192,15 +192,15 @@ public partial class WorkspaceConversation : UserControl
                 var isfirst = true;
                 var autoCallTool = false;
                 var isInference = false;
-                if (ViewModel.CurrentModel.Equals("Chat", StringComparison.OrdinalIgnoreCase))
+                if (ViewModel.CurrentModel.Key.Equals("Chat", StringComparison.OrdinalIgnoreCase))
                 {
                     autoCallTool = false;
                 }
-                else if (ViewModel.CurrentModel.Equals("Agent", StringComparison.OrdinalIgnoreCase))
+                else if (ViewModel.CurrentModel.Key.Equals("Agent", StringComparison.OrdinalIgnoreCase))
                 {
                     autoCallTool = true;
                 }
-                else if (ViewModel.CurrentModel.Equals("inference", StringComparison.OrdinalIgnoreCase))
+                else if (ViewModel.CurrentModel.Key.Equals("inference", StringComparison.OrdinalIgnoreCase))
                 {
                     isInference = true;
                 }
@@ -263,12 +263,12 @@ public partial class WorkspaceConversation : UserControl
                         bot.Content += item.Content;
 
                         token++;
-                        if (token == 4 || isfirst)
+                        if (token == 2 || isfirst)
                         {
                             Dispatcher.UIThread.Invoke(() => { botView.Content = bot.Content; });
                             isfirst = false;
                         }
-                        else if (token == 7)
+                        else if (token == 6)
                         {
                             token = 0;
                             Dispatcher.UIThread.Invoke(() =>

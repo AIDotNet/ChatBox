@@ -66,6 +66,7 @@
                         VerticalAlignment="Center"
                         IsEnabled="{Binding !IsGenerating}"
                         HorizontalAlignment="Right"
+                        SelectedIndex="0"
                         SelectedItem="{Binding CurrentModel}"
                         ItemsSource="{Binding ModelList}"
                         Name="ModelComboBox"
@@ -75,10 +76,11 @@
                                 <Grid ColumnDefinitions="Auto,*">
                                     <TextBlock
                                         FontSize="12"
-                                        Grid.Column="1" Text="{Binding }" FontFamily="{Binding}" />
+                                        
+                                        Grid.Column="1" Text="{Binding Name}" FontFamily="{Binding}" />
                                 </Grid>
                             </DataTemplate>
-                            </ComboBox.ItemTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
                     <Button Grid.Column="1" Click="Submit"
                             VerticalAlignment="Center"

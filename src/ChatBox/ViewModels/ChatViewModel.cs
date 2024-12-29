@@ -24,6 +24,8 @@ public class ChatViewModel : ModelListViewModel
 
 			CalculateToken();
 		};
+		
+		CurrentModel = ModelList.FirstOrDefault();
 	}
 
 	private string _message;
@@ -113,18 +115,30 @@ public class ChatViewModel : ModelListViewModel
 	/// 当前模型
 	/// </summary>
 	/// <returns></returns>
-	private string _currentModel = "Chat";
+	private ModelListDto _currentModel = new();
 	
-	public string CurrentModel
+	public ModelListDto CurrentModel
 	{
 		get => _currentModel;
 		set => SetProperty(ref _currentModel, value);
 	}
 	
-	public List<string> ModelList { get; set; } = new()
+	public List<ModelListDto> ModelList { get; set; } = new()
 	{
-		"Chat",
-		"Agent",
-		"Inference",
+		new ModelListDto()
+		{
+			Key = "Chat",
+			Name = "对话模式"
+		},
+		new ModelListDto()
+		{
+			Key = "Agent",
+			Name = "智能体模式"
+		},
+		new ModelListDto()
+		{
+			Key = "Inference",
+			Name = "推理模式"
+		},
 	};
 }
