@@ -24,7 +24,6 @@
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.32.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.32.0-alpha" />
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.32.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.32.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.32.0-alpha" />

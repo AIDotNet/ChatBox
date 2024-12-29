@@ -151,6 +151,9 @@ public partial class WorkspaceConversation : UserControl
                 await _chatMessageRepository.DeleteAsync(nextMessage.Id);
             }
 
+            ViewModel.Messages.Remove(message);
+            await _chatMessageRepository.DeleteAsync(message.Id);
+
             ViewModel.IsGenerating = true;
 
             try
@@ -187,9 +190,19 @@ public partial class WorkspaceConversation : UserControl
 
                 ViewModel.OnMessageUpdated?.Invoke();
                 var isfirst = true;
+                var autoCallTool = false;
 
+                if (ViewModel.CurrentModel.Equals("Chat", StringComparison.OrdinalIgnoreCase))
+                {
+                    autoCallTool = false;
+                }
+                else if (ViewModel.CurrentModel.Equals("Agent", StringComparison.OrdinalIgnoreCase))
+                {
+                    autoCallTool = true;
+                }
 
-                await foreach (var item in chatCompleteService.GetChatComplete(newMessage, ViewModel.ModelId.Id, false,
+                await foreach (var item in chatCompleteService.GetChatComplete(newMessage, ViewModel.ModelId.Id,
+                                   autoCallTool,
                                    ViewModel.Files.ToArray()))
                 {
                     if (isfirst)

@@ -12,7 +12,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 namespace ChatBox.AI;
 
-public class ChatCompleteService(SettingService settingService)
+public class ChatCompleteService(SettingService settingService, TokenService tokenService)
 {
     public ChatMessagePlugin? GetPlugin(string modelId, string name)
     {
@@ -37,6 +37,34 @@ public class ChatCompleteService(SettingService settingService)
         };
     }
 
+    /// <summary>
+    /// 翻译内容
+    /// </summary>
+    /// <returns></returns>
+    public async IAsyncEnumerable<StreamingChatMessageContent> TranslateContent(
+        string content, string modelId, string targetLanguage)
+    {
+        var setting = settingService.LoadSetting();
+        var model = tokenService.LoadModels().FirstOrDefault(x => x.Id == modelId);
+
+        var kernel = KernelFactory.GetKernel(setting.ApiKey, modelId, setting.Type);
+
+        var chatComplete = kernel.GetRequiredService<IChatCompletionService>();
+
+        var chatHistory = new ChatHistory();
+
+        chatHistory.AddUserMessage(
+            @"
+是一名精通全世界语言的语言专家，你需要识别用户输入的内容，以国际标准 locale 进行输出，你需要将用户输入的内容翻译成目标语言，目标语言是 {targetLanguage}，请将翻译后的内容输出到聊天框中。
+".Replace("{targetLanguage}", targetLanguage));
+        chatHistory.AddUserMessage(content);
+
+        await foreach (var item in chatComplete.GetStreamingChatMessageContentsAsync(chatHistory))
+        {
+            yield return item;
+        }
+    }
+
     public async Task ApplyCode(string path, string code)
     {
         var setting = settingService.LoadSetting();
@@ -48,7 +76,7 @@ public class ChatCompleteService(SettingService settingService)
         var chatHistory = new ChatHistory();
 
         chatHistory.AddUserMessage(
-@"
+            @"
 You're a smart programmer, powered by gpt-40. I will give you an existing code file and an optimized code block, you need to insert the optimized code block into the existing code file, you need to write the optimized code block correctly into the correct location of the complete file, please write the modified code file to {path}
 Here is the optimized code block
 ```
@@ -69,7 +97,6 @@ This is the complete code
                     MaxTokens = setting.MaxToken,
                     ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
                 }, kernel);
-
         }
         else
         {
@@ -79,10 +106,8 @@ This is the complete code
                                    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
                                }, kernel))
             {
-
             }
         }
-
     }
 
     public async IAsyncEnumerable<StreamingChatMessageContent> GetChatComplete(
@@ -90,9 +115,9 @@ This is the complete code
         string modelId, bool autoCallTool, FileModel[] files)
     {
         var setting = settingService.LoadSetting();
+        var model = tokenService.LoadModels().FirstOrDefault(x => x.Id == modelId);
 
-
-        var kernel = KernelFactory.GetKernel(setting.ApiKey, modelId,  setting.Type);
+        var kernel = KernelFactory.GetKernel(setting.ApiKey, modelId, setting.Type);
 
         var chatComplete = kernel.GetRequiredService<IChatCompletionService>();
 
@@ -133,40 +158,19 @@ This is the complete code
             }
         }
 
-        if (string.IsNullOrEmpty(setting.Type) || setting.Type.Equals("OpenAI", StringComparison.OrdinalIgnoreCase))
+        if (model?.FunctionCall == false && autoCallTool)
         {
-            await foreach (var item in chatComplete.GetStreamingChatMessageContentsAsync(chatHistory,
-                               new OpenAIPromptExecutionSettings()
-                               {
-                                   MaxTokens = setting.MaxToken,
-                                   ToolCallBehavior = autoCallTool ? ToolCallBehavior.AutoInvokeKernelFunctions : null
-                               }, kernel))
-            {
-                yield return item;
-            }
+            autoCallTool = false;
         }
-        else if (setting.Type.Equals("Ollama", StringComparison.OrdinalIgnoreCase))
-        {
-            var items = await chatComplete.GetChatMessageContentAsync(chatHistory,
-                new OpenAIPromptExecutionSettings()
-                {
-                    MaxTokens = setting.MaxToken,
-                    ToolCallBehavior = autoCallTool ? ToolCallBehavior.AutoInvokeKernelFunctions : null
-                }, kernel);
 
-            yield return new StreamingChatMessageContent(items.Role, items.Content);
-        }
-        else
+        await foreach (var item in chatComplete.GetStreamingChatMessageContentsAsync(chatHistory,
+                           new OpenAIPromptExecutionSettings()
+                           {
+                               MaxTokens = setting.MaxToken,
+                               ToolCallBehavior = autoCallTool ? ToolCallBehavior.AutoInvokeKernelFunctions : null
+                           }, kernel))
         {
-            await foreach (var item in chatComplete.GetStreamingChatMessageContentsAsync(chatHistory,
-                               new OpenAIPromptExecutionSettings()
-                               {
-                                   MaxTokens = setting.MaxToken,
-                                   ToolCallBehavior = autoCallTool ? ToolCallBehavior.AutoInvokeKernelFunctions : null
-                               }, kernel))
-            {
-                yield return item;
-            }
+            yield return item;
         }
     }
 

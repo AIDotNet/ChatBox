@@ -22,10 +22,12 @@
                                  SelectionChanged="NvSample_OnSelectionChanged"
                                  Name="NavView"
                                  IsPaneOpen="False"
+                                 MenuItemTemplateSelector="{Binding SelectedNavMenu}"
                                  IsPaneToggleButtonVisible="False"
                                  IsSettingsVisible="True">
             <controls:NavigationView.MenuItems>
-                <controls:NavigationViewItem Content="AI Chat" Tag="AIChat" IconSource="Message" />
+                <controls:NavigationViewItem Content="AI对话" Tag="AIChat" IconSource="Message" />
+                <controls:NavigationViewItem Content="工具" Tag="Tool" IconSource="AllApps" />
             </controls:NavigationView.MenuItems>
             <controls:NavigationView.Content>
                 <ContentControl
@@ -37,9 +39,9 @@
             </controls:NavigationView.Content>
         </controls:NavigationView>
 
-        <Border Background="Black" Opacity="0.8" IsVisible="{Binding !IsLogin}">
+        <Border PointerPressed="OnPointerPressed" Background="Black" Opacity="0.8" IsVisible="{Binding !IsLogin}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="请先登录在记录" Foreground="White" FontSize="24" />
+                <TextBlock Text="请先登录在系统" Foreground="White" FontSize="24" />
                 <Button Content="登录"
                         Width="170"
                         Click="Button_OnClick" Margin="0,8,0,0" />

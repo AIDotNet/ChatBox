@@ -30,23 +30,6 @@ namespace ChatBox.Controls
         // 1. 用于存储当前 Markdown 内容的私有字段
         private string _value = string.Empty;
 
-        // 2. Public 属性，供外部绑定或设置 Markdown 文本
-        public string Value
-        {
-            get => _value;
-            set
-            {
-                // 若新值与旧值相同，跳过渲染
-                if (_value == value)
-                    return;
-
-                _value = value;
-
-                // 异步触发渲染流程，避免阻塞UI线程
-                RenderMarkdownAsync(_value);
-            }
-        }
-
         public event EventHandler DeleteClicked;
         public event EventHandler CopyClicked;
         public event EventHandler EditClicked;
@@ -58,9 +41,6 @@ namespace ChatBox.Controls
 
             // 获取你的 AI 服务
             _chatCompleteService = HostApplication.Services.GetService<ChatCompleteService>();
-
-            // 订阅主题更改事件（若你需要监听 Avalonia 框架的主题切换）
-            Application.Current.ActualThemeVariantChanged += OnThemeVariantChanged;
         }
 
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -98,87 +78,6 @@ namespace ChatBox.Controls
             ReGenerateClicked?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// 主题变更时触发
-        /// </summary>
-        private void OnThemeVariantChanged(object sender, EventArgs e)
-        {
-            // 若需要在主题切换时重新渲染，可以再次调用
-            // 不想完全重新解析 Markdown，可自行优化只更新代码高亮部分
-            RenderMarkdownAsync(_value);
-        }
-
-        /// <summary>
-        /// 异步渲染 Markdown
-        /// </summary>
-        private async void RenderMarkdownAsync(string markdownText)
-        {
-            // 在后台解析 Markdown
-            var controls = await Task.Run(() =>
-            {
-                // 解析 Markdown
-                var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-                var document = Markdig.Markdown.Parse(markdownText ?? string.Empty, pipeline);
-
-                // 根据解析结果，生成控件列表
-                // 你可把这部分逻辑拆到单独方法里，这里为演示直接内联
-                var panel = new StackPanel
-                {
-                    Orientation = Orientation.Vertical,
-                    Spacing = 6
-                };
-
-                // 遍历节点并渲染
-                foreach (var block in document)
-                {
-                    // 简化演示，只渲染代码块
-                    if (block is FencedCodeBlock fencedCodeBlock)
-                    {
-                        var container = new StackPanel
-                        {
-                            Orientation = Orientation.Vertical,
-                            Margin = new Thickness(0, 6)
-                        };
-
-                        var headerPanel = new StackPanel
-                        {
-                            Orientation = Orientation.Horizontal
-                        };
-
-                        var contentPanel = new StackPanel
-                        {
-                            Orientation = Orientation.Vertical
-                        };
-
-                        // 使用你原本的代码块渲染逻辑
-                        RenderControl_OnCodeToolRenderEvent(headerPanel, contentPanel, fencedCodeBlock);
-
-                        container.Children.Add(headerPanel);
-                        container.Children.Add(contentPanel);
-
-                        panel.Children.Add(container);
-                    }
-                    else
-                    {
-                        // 其他类型的节点可自行处理
-                        // 例如添加到某个 TextBlock 中等
-                    }
-                }
-
-                return panel;
-            });
-
-            // 回到UI线程，将生成好的控件赋给本控件的 Content 或者合并到你已有的 Panel 中
-            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                // 假设此控件本身是一个 ContentControl 或者你有一个内部 Panel
-                // 为方便演示，这里直接把结果赋给 Content
-                // 如果你在 XAML 里有 <ContentPresenter /> 或 <Panel x:Name="RootPanel" />，
-                // 你可自行替换对应写法
-                Content = controls;
-            });
-        }
-
         private void RenderControl_OnCodeToolRenderEvent(
             StackPanel headerPanel,
             StackPanel stackPanel,
@@ -188,8 +87,8 @@ namespace ChatBox.Controls
             if (fencedCodeBlock.Lines.Count <= 1) return;
 
             // 2. 获取语言、文件路径等信息
-            var infoParts = fencedCodeBlock.Info?.Split(":", StringSplitOptions.RemoveEmptyEntries) 
-                           ?? Array.Empty<string>();
+            var infoParts = fencedCodeBlock.Info?.Split(":", StringSplitOptions.RemoveEmptyEntries)
+                            ?? [];
             var language = infoParts.Length > 0 ? infoParts[0] : (fencedCodeBlock.Info ?? "text");
             var filePath = infoParts.Length > 1 ? string.Join(":", infoParts.Skip(1)) : string.Empty;
 
@@ -294,8 +193,8 @@ namespace ChatBox.Controls
                     // 如果是新文件则直接写入，否则执行代理代码
                     if (!info.Exists)
                     {
-                        using var stream = info.CreateText();
-                        stream.Write(codeText);
+                        await using var stream = info.CreateText();
+                        await stream.WriteAsync(codeText);
                     }
                     else
                     {

@@ -62,27 +62,28 @@
                     </controls:SymbolIcon>
                 </Button>
                 <Grid ColumnDefinitions="*,Auto,Auto" Grid.Column="2">
-                    <Button Click="Submit"
+                    <ComboBox
+                        VerticalAlignment="Center"
+                        IsEnabled="{Binding !IsGenerating}"
+                        HorizontalAlignment="Right"
+                        SelectedValue="{Binding CurrentModel}"
+                        ItemsSource="{Binding CurrentModel}"
+                        Name="ModelComboBox"
+                        SelectedIndex="0"
+                        Margin="0,5,0,0">
+                        <ComboBoxItem Content="Chat" />
+                        <ComboBoxItem Content="Agent" />
+                        <ComboBoxItem Content="Inference" />
+                    </ComboBox>
+                    <Button Grid.Column="1" Click="Submit"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"
                             IsEnabled="{Binding !IsGenerating}"
                             Background="Transparent"
-                            Margin="0,0,5,0"
+                            Margin="5,5,5,0"
                             BorderBrush="Transparent">
                         <WrapPanel>
                             <TextBlock>submit</TextBlock>
-                            <controls:ProgressRing IsVisible="{Binding IsGenerating}" Width="20" Height="20" />
-                        </WrapPanel>
-                    </Button>
-                    <Button Grid.Column="1"
-                            Click="AgentSubmit"
-                            IsEnabled="{Binding !IsGenerating}"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Right"
-                            Background="Transparent"
-                            BorderBrush="Transparent">
-                        <WrapPanel>
-                            <TextBlock>agent</TextBlock>
                             <controls:ProgressRing IsVisible="{Binding IsGenerating}" Width="20" Height="20" />
                         </WrapPanel>
                     </Button>

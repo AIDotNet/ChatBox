@@ -131,12 +131,16 @@ public class ChatViewModel : ViewModelBase
 
 		Token = token + TokenHelper.GetTotalTokens(Message);
 	}
+
+	/// <summary>
+	/// 当前模型
+	/// </summary>
+	/// <returns></returns>
+	private string _currentModel = "Chat";
 	
-	private bool _isLogin;
-	
-	public bool IsLogin
+	public string CurrentModel
 	{
-		get => _isLogin;
-		set => SetProperty(ref _isLogin, value);
+		get => _currentModel;
+		set => SetProperty(ref _currentModel, value);
 	}
 }

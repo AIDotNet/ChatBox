@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Avalonia.Controls;
+using ChatBox.Models;
 using CommunityToolkit.Mvvm.Messaging;
 
 namespace ChatBox.ViewModels;
@@ -34,8 +36,17 @@ public partial class MainViewModel : ViewModelBase
         Control = s switch
         {
             MenuKeys.MenuKeyAIChat => new ChatViewModel(),
+            MenuKeys.MenuKeyTool => new ToolViewModel(),
             MenuKeys.MenuKeySetting => new SettingViewModel(),
             _ => throw new ArgumentOutOfRangeException(nameof(s), s, null)
         };
+    }
+    
+    private string _selectedNavMenu = MenuKeys.MenuKeyAIChat;
+    
+    public string SelectedNavMenu
+    {
+        get => _selectedNavMenu;
+        set => SetProperty(ref _selectedNavMenu, value);
     }
 }

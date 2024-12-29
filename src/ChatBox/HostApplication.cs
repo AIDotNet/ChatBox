@@ -67,6 +67,9 @@ public class HostApplication
 				services.AddSingleton<MainWindow>();
 				services.AddSingleton<Setting>();
 
+				services.AddSingleton<Tool>();
+				services.AddSingleton<ToolViewModel>();
+
 				services.AddSingleton<Chat>();
 
 				services.AddSingleton<Lazy<DbContext>>((provider =>

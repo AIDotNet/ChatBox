@@ -3,8 +3,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using ChatBox.Desktop;
 using ChatBox.Pages;
 using ChatBox.Service;
@@ -44,6 +46,9 @@ public partial class MainView : UserControl
         var setting = _settingService.LoadSetting();
 
         ViewModel.IsLogin = !string.IsNullOrEmpty(setting.ApiKey);
+        
+        NavView.SelectedItem = NavView.MenuItems[0];
+        NavView.FindControl<NavigationView>("");
     }
 
     private void NvSample_OnSelectionChanged(object? sender, NavigationViewSelectionChangedEventArgs e)
@@ -75,5 +80,15 @@ public partial class MainView : UserControl
                 ViewModel.IsLogin = true;
             });
         });
+    }
+
+    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        // 获取当前窗口并调用 BeginMoveDrag
+        var window = this.GetVisualRoot() as Window;
+        if (window != null)
+        {
+            window.BeginMoveDrag(e);
+        }
     }
 }

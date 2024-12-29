@@ -57,6 +57,21 @@ public class ModelIconConvertor : IValueConverter
 
                 return new Bitmap(favicon.stream);
             }
+            
+            if(modelId.Equals("moonshot", StringComparison.OrdinalIgnoreCase))
+            {
+                var favicon = AssetLoader.OpenAndGetAssembly(new Uri("avares://ChatBox/Assets/moonshot.png"));
+
+                return new Bitmap(favicon.stream);
+            }
+            
+            if(modelId.Equals("zhipu", StringComparison.OrdinalIgnoreCase))
+            {
+                var favicon = AssetLoader.OpenAndGetAssembly(new Uri("avares://ChatBox/Assets/zhipu.png"));
+
+                return new Bitmap(favicon.stream);
+            }
+            
         }
 
         var stream = AssetLoader.OpenAndGetAssembly(new Uri("avares://ChatBox/Assets/openai.png"));

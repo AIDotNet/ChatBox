@@ -74,12 +74,14 @@ public partial class ChatInput : UserControl
 
         try
         {
-            var user = new ChatMessage();
-            user.Content = ViewModel.Message;
-            user.Role = AuthorRole.User.ToString();
-            user.CreatedAt = DateTime.Now;
-            user.Id = Guid.NewGuid().ToString();
-            user.SessionId = ViewModel.SessionId;
+            var user = new ChatMessage
+            {
+                Content = ViewModel.Message,
+                Role = AuthorRole.User.ToString(),
+                CreatedAt = DateTime.Now,
+                Id = Guid.NewGuid().ToString(),
+                SessionId = ViewModel.SessionId
+            };
             user.Meta.Add("avatar", "https://avatars.githubusercontent.com/u/10251060?v=4");
             user.Meta.Add("name", "User");
             bool isfirst = true;
@@ -132,8 +134,8 @@ public partial class ChatInput : UserControl
 
             var model = ViewModel.ModelId.Id;
             var files = ViewModel.Files.ToArray();
-            
-            await Task.Run(async () =>
+
+            _ = Task.Run(async () =>
             {
                 await foreach (var item in chatCompleteService.GetChatComplete(newMessage, model,
                                    autoCallTool, files))
@@ -188,11 +190,11 @@ public partial class ChatInput : UserControl
                     bot.Content += item.Content;
 
                     token++;
-                    if (token == 3)
+                    if (token == 4)
                     {
                         Dispatcher.UIThread.Invoke(() => { botView.Content = bot.Content; });
                     }
-                    else if (token == 6)
+                    else if (token == 7)
                     {
                         token = 0;
                         Dispatcher.UIThread.Invoke(() =>
@@ -203,15 +205,14 @@ public partial class ChatInput : UserControl
                         });
                     }
                 }
-            });
 
-            Dispatcher.UIThread.Invoke(() =>
-            {
-                botView.Content = bot.Content;
-                ViewModel.OnMessageUpdated?.Invoke();
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    botView.Content = bot.Content;
+                    ViewModel.OnMessageUpdated?.Invoke();
+                });
+                await chatMessageRepository.InsertAsync(bot);
             });
-
-            await chatMessageRepository.InsertAsync(bot);
         }
         catch (Exception e)
         {
@@ -231,7 +232,17 @@ public partial class ChatInput : UserControl
 
     private async void Submit(object? sender, RoutedEventArgs e)
     {
-        await SendChatMessage();
+        if (ViewModel.CurrentModel.Equals("Chat", StringComparison.OrdinalIgnoreCase))
+        {
+            await SendChatMessage();
+        }
+        else if (ViewModel.CurrentModel.Equals("Agent", StringComparison.OrdinalIgnoreCase))
+        {
+            await SendChatMessage(true);
+        }
+        else if (ViewModel.CurrentModel.Equals("inference", StringComparison.OrdinalIgnoreCase))
+        {
+        }
     }
 
     private async void DeleteButton_Click(object? sender, RoutedEventArgs e)

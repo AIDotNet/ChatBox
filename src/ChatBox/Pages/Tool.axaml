@@ -1,0 +1,65 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ChatBox.Pages.Tool">
+    
+    <Design.DataContext>
+        <viewModels:ToolViewModel />
+    </Design.DataContext>
+
+    
+    <StackPanel Margin="20">
+        <!-- Title -->
+        <TextBlock Text="翻译工具"
+                   FontSize="32"
+                   PointerPressed="OnPointerPressed"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,20" />
+
+        <!-- Original Text Input -->
+        <TextBox Name="OriginalTextBox"
+                 Watermark="请输入原文..."
+                 AcceptsReturn="True"
+                 Text=""
+                 TextWrapping="WrapWithOverflow"
+                 Height="100"
+                 Margin="0,0,0,10" />
+
+        <!-- Language Selection and Translate Button in the same row -->
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,0,10">
+            <!-- Language Selection -->
+            <ComboBox Name="LanguageComboBox"
+                      SelectedIndex="0"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Right"
+                      Margin="0,0,10,0">
+                <ComboBoxItem Content="中文" />
+                <ComboBoxItem Content="英文" />
+                <ComboBoxItem Content="法文" />
+                <ComboBoxItem Content="德文" />
+                <ComboBoxItem Content="日文" />
+            </ComboBox>
+
+            <!-- Translate Button -->
+            <Button Name="TranslateButton"
+
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Content="翻译"
+                    Width="100"
+                    Click="TranslateButton_Click" />
+        </StackPanel>
+
+        <!-- Translated Text Display -->
+        <SelectableTextBlock Name="TranslatedTextBlock"
+                             Text="翻译内容将在这里显示"
+                             FontSize="16"
+                             TextWrapping="Wrap"
+                             Margin="0,0,0,10" />
+    </StackPanel>
+</UserControl>
