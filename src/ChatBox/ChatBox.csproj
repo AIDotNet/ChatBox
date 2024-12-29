@@ -20,8 +20,7 @@
         <PackageReference Include="Dapper" Version="2.1.35" />
         <PackageReference Include="Dapper.AOT" Version="1.0.31" />
         <PackageReference Include="FluentAvaloniaUI" Version="2.2.0" />
-        <PackageReference Include="MarkdownAIRender" Version="0.1.8" />
-<!--        <PackageReference Include="MarkdownAIRender" Version="0.1.6" />-->
+        <PackageReference Include="MarkdownAIRender" Version="0.1.9" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.32.0" />
@@ -30,11 +29,6 @@
         <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.32.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.32.0-alpha" />
         <PackageReference Include="SharpToken" Version="2.0.3" />
-		<PackageReference Include="Markdig" Version="0.39.1" />
-		<PackageReference Include="Markdig.SyntaxHighlighting" Version="1.1.7" />
-		<PackageReference Include="MarkdigExtensions.SyntaxHighlighting" Version="1.0.3" />
-		<PackageReference Include="MarkdigExtensions.UrlRewriter" Version="1.0.0" />
-        <PackageReference Include="Whyse.Markdig.Slack" Version="1.0.978" />
     </ItemGroup>
 
     <ItemGroup>
@@ -58,7 +52,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\..\Avalonia\Markdown.AIRender\src\MarkdownAIRender\MarkdownAIRender.csproj" />
       <ProjectReference Include="..\ChatBox.Logger\ChatBox.Logger.csproj" />
     </ItemGroup>
 </Project>
