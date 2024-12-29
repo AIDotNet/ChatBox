@@ -31,9 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="models.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="system.md">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

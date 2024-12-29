@@ -9,7 +9,11 @@ public class TokenService
 {
     public List<ModelDto> LoadModels()
     {
-        var path = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "models.json"));
+        FileInfo path;
+        if (OperatingSystem.IsMacOS() || OperatingSystem.IsMacCatalyst())
+            path = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "Contents", "Resources", "models.json"));
+        else
+            path = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "models.json"));
         if (!File.Exists(path.FullName))
         {
             return new List<ModelDto>();

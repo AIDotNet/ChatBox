@@ -1,0 +1,10 @@
+﻿<linker>
+    <assembly fullname="ChatBox.Desktop" preserve="All" />
+    <assembly fullname="ChatBox" preserve="All" />
+    <assembly fullname="AvaloniaExtensions.Axaml" preserve="All" />
+    <assembly fullname="Dapper" preserve="All" />
+    <assembly fullname="Dapper.AOT" preserve="All" />
+    <assembly fullname="System.Net.Http" preserve="All" />
+    <assembly fullname="System.Configuration.ConfigurationManager" preserve="All" />
+    <assembly fullname="AvaloniaXmlTranslator" preserve="All" />
+</linker>
