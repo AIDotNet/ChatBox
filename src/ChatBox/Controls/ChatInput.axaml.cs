@@ -63,7 +63,14 @@ public partial class ChatInput : UserControl
     }
 
 
-    public async Task SendChatMessage(bool autoCallTool = false)
+    /// <summary>
+    /// Send chat message
+    /// </summary>
+    /// <param name="autoCallTool"></param>
+    /// <param name="isInference">
+    /// 是否是推理模式
+    /// </param>
+    public async Task SendChatMessage(bool autoCallTool = false, bool isInference = false)
     {
         if (string.IsNullOrEmpty(ViewModel.Message))
         {
@@ -138,7 +145,7 @@ public partial class ChatInput : UserControl
             _ = Task.Run(async () =>
             {
                 await foreach (var item in chatCompleteService.GetChatComplete(newMessage, model,
-                                   autoCallTool, files))
+                                   autoCallTool, files, isInference))
                 {
                     if (isfirst)
                     {
@@ -242,6 +249,7 @@ public partial class ChatInput : UserControl
         }
         else if (ViewModel.CurrentModel.Equals("inference", StringComparison.OrdinalIgnoreCase))
         {
+            await SendChatMessage(isInference: true);
         }
     }
 

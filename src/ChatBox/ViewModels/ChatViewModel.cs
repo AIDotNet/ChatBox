@@ -120,4 +120,11 @@ public class ChatViewModel : ModelListViewModel
 		get => _currentModel;
 		set => SetProperty(ref _currentModel, value);
 	}
+	
+	public List<string> ModelList { get; set; } = new()
+	{
+		"Chat",
+		"Agent",
+		"Inference",
+	};
 }
