@@ -2,11 +2,14 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using AutoGpt;
 using ChatBox.Models;
 using ChatBox.Service;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
+using OpenAI.Chat;
+using ChatMessage = ChatBox.Models.ChatMessage;
 
 #pragma warning disable SKEXP0110
 
@@ -110,65 +113,142 @@ This is the complete code
 
     public async IAsyncEnumerable<StreamingChatMessageContent> GetChatComplete(
         IEnumerable<ChatMessageListViewModel> messages,
-        string modelId, bool autoCallTool, FileModel[] files)
+        string modelId, bool autoCallTool, FileModel[] files, bool isInference = false)
     {
         var setting = settingService.LoadSetting();
         var model = tokenService.LoadModels().FirstOrDefault(x => x.Id == modelId);
 
-        var kernel = KernelFactory.GetKernel(setting.ApiKey, modelId, setting.Type);
-
-        var chatComplete = kernel.GetRequiredService<IChatCompletionService>();
-
-        var chatHistory = new ChatHistory();
-
-        if (files.Length > 0)
+        if (isInference)
         {
-            chatHistory.AddSystemMessage(
-                "You are an intelligent programmer, powered by GPT-4o. You are happy to help answer any questions that the user has (usually they will be about coding).\\n\\n1. When the user is asking for edits to their code, please output a simplified version of the code block that highlights the changes necessary and adds comments to indicate where unchanged code has been skipped. For example:\\n```language:path/to/file\\n// ... existing code ...\\n{{ edit_1 }}\\n// ... existing code ...\\n{{ edit_2 }}\\n// ... existing code ...\\n```\\nThe user can see the entire file, so they prefer to only read the updates to the code. Often this will mean that the start/end of the file will be skipped, but that's okay! Rewrite the entire file only if specifically requested. Always provide a brief explanation of the updates, unless the user specifically requests only the code.\\n\\n2. Do not lie or make up facts.\\n\\n3. If a user messages you in a foreign language, please respond in that language.\\n\\n4. Format your response in markdown.\\n\\n5. When writing out new code blocks, please specify the language ID after the initial backticks, like so: \\n```python\\n{{ code }}\\n```\\n\\n6. When writing out code blocks for an existing file, please also specify the file path after the initial backticks and restate the method / class your codeblock belongs to, like so:\\n```language:some/other/file\\nfunction AIChatHistory() {\\n    ...\\n    {{ code }}\\n    ...\\n}\\n``");
+            var autoGptClient = KernelFactory.GetClient(modelId, setting.ApiKey);
 
-            var prompt =
-                "# Inputs\n\n## Current File\nHere is the file I'm looking at. It might be truncated from above and below and, if so, is centered around my cursor.\n";
+            var chatMessages = new List<OpenAI.Chat.ChatMessage>();
+            float? temperature = null;
 
-            foreach (var file in files)
+            if (files.Length > 0)
             {
-                prompt += $"{await GetFileMarkdown(file.FullName)}";
+                chatMessages.Add(
+                    new SystemChatMessage(
+                        "You are an intelligent programmer, powered by GPT-4o. You are happy to help answer any questions that the user has (usually they will be about coding).\\n\\n1. When the user is asking for edits to their code, please output a simplified version of the code block that highlights the changes necessary and adds comments to indicate where unchanged code has been skipped. For example:\\n```language:path/to/file\\n// ... existing code ...\\n{{ edit_1 }}\\n// ... existing code ...\\n{{ edit_2 }}\\n// ... existing code ...\\n```\\nThe user can see the entire file, so they prefer to only read the updates to the code. Often this will mean that the start/end of the file will be skipped, but that's okay! Rewrite the entire file only if specifically requested. Always provide a brief explanation of the updates, unless the user specifically requests only the code.\\n\\n2. Do not lie or make up facts.\\n\\n3. If a user messages you in a foreign language, please respond in that language.\\n\\n4. Format your response in markdown.\\n\\n5. When writing out new code blocks, please specify the language ID after the initial backticks, like so: \\n```python\\n{{ code }}\\n```\\n\\n6. When writing out code blocks for an existing file, please also specify the file path after the initial backticks and restate the method / class your codeblock belongs to, like so:\\n```language:some/other/file\\nfunction AIChatHistory() {\\n    ...\\n    {{ code }}\\n    ...\\n}\\n``"));
+
+                var prompt =
+                    "# Inputs\n\n## Current File\nHere is the file I'm looking at. It might be truncated from above and below and, if so, is centered around my cursor.\n";
+
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        prompt += $"{await GetFileMarkdown(file.FullName)}";
+                    }
+                    catch (Exception e)
+                    {
+                        HostApplication.Error("读取文件失败", e);
+                    }
+                }
+
+                chatMessages.Add(new UserChatMessage(prompt));
             }
 
-            chatHistory.AddUserMessage(prompt);
-        }
-
-        foreach (var message in messages)
-        {
-            switch (message.Role)
+            foreach (var message in messages)
             {
-                case "user":
-                    chatHistory.AddUserMessage(message.Content);
-                    break;
-                case "assistant":
-                    chatHistory.AddAssistantMessage(message.Content);
-                    break;
-                case "system":
-                    chatHistory.AddSystemMessage(message.Content);
-                    break;
-                case "tool":
-                    chatHistory.AddMessage(AuthorRole.Tool, message.Content);
-                    break;
+                switch (message.Role)
+                {
+                    case "user":
+                        chatMessages.Add(new UserChatMessage(message.Content));
+                        break;
+                    case "assistant":
+                        chatMessages.Add(new AssistantChatMessage(message.Content));
+                        break;
+                    case "system":
+                        chatMessages.Add(new SystemChatMessage(message.Content));
+                        break;
+                    case "tool":
+                        chatMessages.Add(new ToolChatMessage(message.Content));
+                        break;
+                }
+            }
+
+            yield return new StreamingChatMessageContent(AuthorRole.Assistant, "> 开始思考");
+
+            await foreach (var make in autoGptClient.GenerateResponseAsync(chatMessages, setting.ApiKey, modelId,
+                               setting.MaxToken, temperature))
+            {
+                if (make.Type == MakeResultDto.MakeResultType.Step)
+                {
+                    yield return new StreamingChatMessageContent(AuthorRole.Assistant,
+                        make.Content = "> " + make.Title + Environment.NewLine + "> " +
+                                       make.Content?.Replace("\n", "\n> ") + Environment.NewLine);
+                }
+                else if (make.Type == MakeResultDto.MakeResultType.FinalAnswer)
+                {
+                    yield return new StreamingChatMessageContent(AuthorRole.Assistant, make.Content);
+                }
             }
         }
-
-        if (model?.FunctionCall == false && autoCallTool)
+        else
         {
-            autoCallTool = false;
-        }
+            var kernel = KernelFactory.GetKernel(setting.ApiKey, modelId, setting.Type);
 
-        await foreach (var item in chatComplete.GetStreamingChatMessageContentsAsync(chatHistory,
-                           new OpenAIPromptExecutionSettings()
-                           {
-                               MaxTokens = setting.MaxToken,
-                               ToolCallBehavior = autoCallTool ? ToolCallBehavior.AutoInvokeKernelFunctions : null
-                           }, kernel))
-        {
-            yield return item;
+            var chatComplete = kernel.GetRequiredService<IChatCompletionService>();
+
+            var chatHistory = new ChatHistory();
+
+            if (files.Length > 0)
+            {
+                chatHistory.AddSystemMessage(
+                    "You are an intelligent programmer, powered by GPT-4o. You are happy to help answer any questions that the user has (usually they will be about coding).\\n\\n1. When the user is asking for edits to their code, please output a simplified version of the code block that highlights the changes necessary and adds comments to indicate where unchanged code has been skipped. For example:\\n```language:path/to/file\\n// ... existing code ...\\n{{ edit_1 }}\\n// ... existing code ...\\n{{ edit_2 }}\\n// ... existing code ...\\n```\\nThe user can see the entire file, so they prefer to only read the updates to the code. Often this will mean that the start/end of the file will be skipped, but that's okay! Rewrite the entire file only if specifically requested. Always provide a brief explanation of the updates, unless the user specifically requests only the code.\\n\\n2. Do not lie or make up facts.\\n\\n3. If a user messages you in a foreign language, please respond in that language.\\n\\n4. Format your response in markdown.\\n\\n5. When writing out new code blocks, please specify the language ID after the initial backticks, like so: \\n```python\\n{{ code }}\\n```\\n\\n6. When writing out code blocks for an existing file, please also specify the file path after the initial backticks and restate the method / class your codeblock belongs to, like so:\\n```language:some/other/file\\nfunction AIChatHistory() {\\n    ...\\n    {{ code }}\\n    ...\\n}\\n``");
+
+                var prompt =
+                    "# Inputs\n\n## Current File\nHere is the file I'm looking at. It might be truncated from above and below and, if so, is centered around my cursor.\n";
+
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        prompt += $"{await GetFileMarkdown(file.FullName)}";
+                    }
+                    catch (Exception e)
+                    {
+                        HostApplication.Error("读取文件失败", e);
+                    }
+                }
+
+                chatHistory.AddUserMessage(prompt);
+            }
+
+            if (model?.FunctionCall == false && autoCallTool)
+            {
+                autoCallTool = false;
+            }
+
+            foreach (var message in messages)
+            {
+                switch (message.Role)
+                {
+                    case "user":
+                        chatHistory.AddUserMessage(message.Content);
+                        break;
+                    case "assistant":
+                        chatHistory.AddAssistantMessage(message.Content);
+                        break;
+                    case "system":
+                        chatHistory.AddSystemMessage(message.Content);
+                        break;
+                    case "tool":
+                        chatHistory.AddMessage(AuthorRole.Tool, message.Content);
+                        break;
+                }
+            }
+
+            await foreach (var item in chatComplete.GetStreamingChatMessageContentsAsync(chatHistory,
+                               new OpenAIPromptExecutionSettings()
+                               {
+                                   MaxTokens = setting.MaxToken,
+                                   ToolCallBehavior = autoCallTool ? ToolCallBehavior.AutoInvokeKernelFunctions : null
+                               }, kernel))
+            {
+                yield return item;
+            }
         }
     }
 
