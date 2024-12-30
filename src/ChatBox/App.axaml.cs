@@ -1,15 +1,9 @@
-using System;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
-using ChatBox.Pages;
-using ChatBox.ViewModels;
 using ChatBox.Views;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace ChatBox;
 
@@ -22,12 +16,10 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var host = HostApplication.Builder();
-        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             BindingPlugins.DataValidators.RemoveAt(0);
-            desktop.MainWindow = host.Services.GetRequiredService<MainWindow>();
+            desktop.MainWindow = HostApplication.Services.GetRequiredService<MainWindow>();
 
             // 创建托盘
             var trayIcon = new TrayIcon();
@@ -49,7 +41,7 @@ public partial class App : Application
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            singleViewPlatform.MainView = host.Services.GetRequiredService<MainWindow>();
+            singleViewPlatform.MainView = HostApplication.Services.GetRequiredService<MainWindow>();
         }
 
         base.OnFrameworkInitializationCompleted();

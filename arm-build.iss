@@ -36,7 +36,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=D:\GitHub\ChatBox\outpu
-OutputBaseFilename=win-64-framework
+OutputBaseFilename=win-arm64
 SetupIconFile=D:\GitHub\ChatBox\favicon.ico
 Compression=lzma
 SolidCompression=yes
@@ -49,9 +49,9 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\GitHub\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\GitHub\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-x64\i18n\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\GitHub\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\GitHub\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-arm64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\GitHub\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-arm64\i18n\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\GitHub\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-arm64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

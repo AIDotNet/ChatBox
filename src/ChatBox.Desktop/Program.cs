@@ -11,6 +11,10 @@ sealed class Program
     {
         try
         {
+
+            HostApplication.Builder();
+
+
             CrossPlatformCustomProtocolHelper.RegisterCustomProtocol();
 
             var token = CrossPlatformCustomProtocolHelper.ParseCustomProtocolArgs(args);
