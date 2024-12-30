@@ -3,8 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              x:Class="ChatBox.Controls.WorkspaceHeader">
     
     <Design.DataContext>
@@ -13,7 +13,7 @@
     
     <StackPanel 
         PointerPressed="OnPointerPressed">
-        <Grid ColumnDefinitions="*">
+        <Grid ColumnDefinitions="*,Auto">
             <Grid 
                 Margin="8"
                 ColumnDefinitions="*,Auto"
@@ -24,6 +24,19 @@
                     AI Chat
                 </TextBlock>
             </Grid>
+            
+            <Button
+                Grid.Column="1" ToolTip.Tip="隐藏当前窗口"
+                Background="Transparent"
+                BorderThickness="0"
+                Margin="0,0,5,0"
+                >
+                <controls:ImageIcon
+                    Margin="0,0,0,0"
+                    Height="16"
+                    Width="16"
+                    Source="../Assets/close.png" />
+            </Button>
         </Grid>
         <Border
             Height="1"

@@ -144,6 +144,7 @@ public partial class ChatInput : UserControl
 
             _ = Task.Run(async () =>
             {
+                int token = 0;
                 await foreach (var item in chatCompleteService.GetChatComplete(newMessage, model,
                                    autoCallTool, files, isInference))
                 {
@@ -156,7 +157,6 @@ public partial class ChatInput : UserControl
                         });
                     }
 
-                    int token = 0;
                     foreach (var x in item.Items)
                     {
                         if (x is StreamingFunctionCallUpdateContent callUpdateContent)
@@ -198,10 +198,10 @@ public partial class ChatInput : UserControl
                     token++;
                     if (token == 4 || isfirst)
                     {
-                        Dispatcher.UIThread.Invoke(() => { botView.Content = bot.Content; });
+                        await Dispatcher.UIThread.InvokeAsync(() => { botView.Content = bot.Content; });
                         isfirst = false;
                     }
-                    else if (token == 7)
+                    else if (token == 6)
                     {
                         token = 0;
                         Dispatcher.UIThread.Invoke(() =>

@@ -211,6 +211,7 @@ public partial class WorkspaceConversation : UserControl
 
                 _ = Task.Run(async () =>
                 {
+                    int token = 0;
                     await foreach (var item in chatCompleteService.GetChatComplete(newMessage, model,
                                        autoCallTool, files, isInference))
                     {
@@ -223,7 +224,6 @@ public partial class WorkspaceConversation : UserControl
                             });
                         }
 
-                        int token = 0;
                         foreach (var x in item.Items)
                         {
                             if (x is StreamingFunctionCallUpdateContent callUpdateContent)
@@ -263,15 +263,15 @@ public partial class WorkspaceConversation : UserControl
                         bot.Content += item.Content;
 
                         token++;
-                        if (token == 2 || isfirst)
+                        if (token == 4 || isfirst)
                         {
-                            Dispatcher.UIThread.Invoke(() => { botView.Content = bot.Content; });
+                            await Dispatcher.UIThread.InvokeAsync(() => { botView.Content = bot.Content; });
                             isfirst = false;
                         }
-                        else if (token == 6)
+                        else if (token == 7)
                         {
                             token = 0;
-                            Dispatcher.UIThread.Invoke(() =>
+                            await Dispatcher.UIThread.InvokeAsync(() =>
                             {
                                 botView.Content = bot.Content;
 
@@ -280,7 +280,7 @@ public partial class WorkspaceConversation : UserControl
                         }
                     }
 
-                    Dispatcher.UIThread.Invoke(() =>
+                    await Dispatcher.UIThread.InvokeAsync(() =>
                     {
                         botView.Content = bot.Content;
                         ViewModel.OnMessageUpdated?.Invoke();

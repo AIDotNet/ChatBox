@@ -9,13 +9,14 @@
         d:DesignHeight="450"
         Height="850"
         Width="550"
-        MinHeight="300"
-        MinWidth="280"
+        MinHeight="450"
+        MinWidth="380"
         x:Class="ChatBox.Views.MainWindow"
         TransparencyLevelHint="AcrylicBlur"
         ExtendClientAreaToDecorationsHint="True"
         WindowStartupLocation="CenterScreen"
+        ExtendClientAreaChromeHints="SystemChrome"
         Icon="/Assets/favicon.ico"
-        Title="ChatBox">
+        Title="智能助手">
     <views:MainView />
 </Window>

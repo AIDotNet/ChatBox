@@ -55,6 +55,28 @@
     "vision": true
   },
   {
+    "icon": "OpenAI",
+    "deploymentName": "net-o1",
+    "description": "net-o1 是 OpenAI 推出的智能推理联网模型，支持多种复杂任务。",
+    "displayName": "Net O1 联网模型",
+    "enabled": true,
+    "functionCall": false,
+    "id": "net-o1",
+    "tokens": 128000,
+    "vision": true
+  },
+  {
+    "icon": "OpenAI",
+    "deploymentName": "net-o1-mini",
+    "description": "net-o1-mini 是 OpenAI 推出的智能推理联网模型，支持多种复杂任务。",
+    "displayName": "net o1 mini 联网模型",
+    "enabled": true,
+    "functionCall": false,
+    "id": "net-o1-mini",
+    "tokens": 128000,
+    "vision": true
+  },
+  {
     "icon": "Qwen",
     "description": "Qwen2-7B-Instruct 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。",
     "displayName": "Qwen2-7B-Instruct",
@@ -110,6 +132,14 @@
     "tokens": 128000
   },
   {
+    "icon": "Qwen",
+    "description": "qwq-32b-preview 是阿里巴巴推出的推理模型，适用于复杂算法代码场景",
+    "displayName": "qwq-32b-preview",
+    "functionCall": true,
+    "id": "qwq-32b-preview",
+    "tokens": 128000
+  },
+  {
     "icon": "GLM",
     "description": "glm-4-flash 是智谱清言推出的高效模型，适用于多种应用场景。",
     "displayName": "glm-4-flash",
@@ -118,7 +148,7 @@
     "tokens": 128000
   },
   {
-    "icon": "zhipu",
+    "icon": "moonshot",
     "description": "Moonshot v1 128k 文本模型，适用于多种应用场景。",
     "displayName": "moonshot Kimi",
     "functionCall": true,

@@ -1,22 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
-using Avalonia.Media;
 using Avalonia.Styling;
 using ChatBox.AI;
-using ChatBox.Models;
 using ChatBox.Views;
 using FluentAvalonia.UI.Controls;
-using Markdig;
 using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
 using MarkdownAIRender.CodeRender;
 using TextMateSharp.Grammars;
 
@@ -26,9 +18,6 @@ namespace ChatBox.Controls
     {
         private WindowNotificationManager? _notificationManager;
         private readonly ChatCompleteService _chatCompleteService;
-
-        // 1. 用于存储当前 Markdown 内容的私有字段
-        private string _value = string.Empty;
 
         public event EventHandler DeleteClicked;
         public event EventHandler CopyClicked;
@@ -84,7 +73,7 @@ namespace ChatBox.Controls
             FencedCodeBlock fencedCodeBlock)
         {
             // 1. 如果没有内容，直接返回
-            if (fencedCodeBlock.Lines.Count <= 1) return;
+            if (fencedCodeBlock.Lines.Count < 1) return;
 
             // 2. 获取语言、文件路径等信息
             var infoParts = fencedCodeBlock.Info?.Split(":", StringSplitOptions.RemoveEmptyEntries)

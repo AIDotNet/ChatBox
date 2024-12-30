@@ -21,7 +21,7 @@
         <PackageReference Include="Dapper" Version="2.1.35" />
         <PackageReference Include="Dapper.AOT" Version="1.0.31" />
         <PackageReference Include="FluentAvaloniaUI" Version="2.2.0" />
-        <PackageReference Include="MarkdownAIRender" Version="0.1.9" />
+        <PackageReference Include="MarkdownAIRender" Version="0.1.12" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.32.0" />
@@ -32,11 +32,29 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="i18n\Language.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Language.tt</DependentUpon>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
       <None Update="system.md">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="i18n\Language.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>Language.cs</LastGenOutput>
+        </None>
+        <None Update="i18n\ChatBoxMarkdown.zh-Hant.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    
     <ItemGroup>
       <Compile Update="Controls\ActionBar\ActionBar.axaml.cs">
         <DependentUpon>ActionBar.axaml</DependentUpon>

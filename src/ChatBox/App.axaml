@@ -22,5 +22,6 @@
         <sty:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
         <StyleInclude Source="avares://ChatBox/Styling/ControlsGalleryStyles.axaml" />
         <StyleInclude Source="avares://MarkdownAIRender/Index.axaml" />
+        
     </Application.Styles>
 </Application>
