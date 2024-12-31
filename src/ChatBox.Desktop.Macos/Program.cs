@@ -13,6 +13,7 @@ static class Program
         try
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledException;
+            HostApplication.Builder();
             NSApplication.Init();
             NSApplication.SharedApplication.Delegate = new AppDelegate();
             NSApplication.Main(args);

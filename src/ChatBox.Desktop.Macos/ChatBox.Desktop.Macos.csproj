@@ -23,18 +23,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ChatBox\ChatBox.csproj"/>
+        <ProjectReference Include="..\ChatBox\ChatBox.csproj">
+            <Properties>IsMac=true;MACOutputPath=$(ProjectDir)/$(OutputPath);MACAPPName=ChatBox.Desktop.Macos.app</Properties>
+        </ProjectReference>
     </ItemGroup>
-
-
+    
     <ItemGroup>
         <TrimmerRootDescriptor Include="Roots.xml" />
         <Content Include="logo.ico" />
     </ItemGroup>
 
-
     <ItemGroup>
       <None Remove="favicon.ico" />
-      <BundleResource Include="models.json" />
     </ItemGroup>
 </Project>

@@ -41,8 +41,5 @@
 
     <ItemGroup>
       <None Remove="favicon.ico" />
-      <None Update="models.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 </Project>

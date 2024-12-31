@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Platform;
 using ChatBox.Views;
 
@@ -18,6 +19,14 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            if (OperatingSystem.IsMacOS() || OperatingSystem.IsMacCatalyst())
+            {
+                this.Styles.Add(new StyleInclude(new Uri("resm:Styles?assembly=ChatBox"))
+                {
+                    Source = new Uri("avares://ChatBox/Styling/MacOSStyles.axaml")
+                });
+            }
+            
             BindingPlugins.DataValidators.RemoveAt(0);
             desktop.MainWindow = HostApplication.Services.GetRequiredService<MainWindow>();
 
