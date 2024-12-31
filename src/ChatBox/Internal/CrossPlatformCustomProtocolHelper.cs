@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Avalonia.Platform.Storage;
 using ChatBox.Views;
 
@@ -38,10 +39,21 @@ public class CrossPlatformCustomProtocolHelper
     public static void OpenCustomProtocolUrl()
     {
         var url = CustomProtocol + "://callback";
-        // 打开https://api.token-ai.cn/login?redirect_uri=chatbox://callback
-        // 会调用默认浏览器打开 URL
-        var launcher = TopLevel.GetTopLevel(HostApplication.Services.GetRequiredService<MainView>())!.Launcher;
-        launcher.LaunchUriAsync(new Uri("https://api.token-ai.cn/login?redirect_uri=" + url));
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            // Windows
+            // 直接调用系统默认浏览器打开 URL
+            System.Diagnostics.Process.Start("https://api.token-ai.cn/login?redirect_uri=" + url);
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            System.Diagnostics.Process.Start("xdg-open", "https://api.token-ai.cn/login?redirect_uri=" + url);
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            var launcher = TopLevel.GetTopLevel(HostApplication.Services.GetRequiredService<MainView>())!.Launcher;
+            launcher.LaunchUriAsync(new Uri("https://api.token-ai.cn/login?redirect_uri=" + url));
+        }
     }
 
     /// <summary>
@@ -64,7 +76,7 @@ public class CrossPlatformCustomProtocolHelper
             // HKEY_CLASSES_ROOT\chatbox\shell\open\command
             // (默认) = "ChatBox.Desktop.exe %1"
             var key = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(CustomProtocol);
-            
+
             key.SetValue("", "URL:ChatBox Protocol");
             key.SetValue("URL Protocol", "");
             key.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue("", $"\"{path}\" \"%1\"");
@@ -73,7 +85,6 @@ public class CrossPlatformCustomProtocolHelper
             // (默认) = "ChatBox.Desktop.exe,1"
             key = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(CustomProtocol).CreateSubKey("DefaultIcon");
             key.SetValue("", $"\"{path}\",1");
-
         }
         else if (OperatingSystem.IsLinux())
         {
