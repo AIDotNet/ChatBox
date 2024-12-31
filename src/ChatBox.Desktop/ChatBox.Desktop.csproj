@@ -25,7 +25,7 @@
     <ItemGroup>
         <PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3" />
-        <PackageReference Include="Nlnet.Avalonia.DevTools" Version="1.0.1-beta.27" />
+        <PackageReference  Condition="'$(Configuration)' == 'Debug'" Include="Nlnet.Avalonia.DevTools" Version="1.0.1-beta.27" />
     </ItemGroup>
 
     <ItemGroup>
