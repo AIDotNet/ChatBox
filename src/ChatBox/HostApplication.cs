@@ -72,6 +72,7 @@ public class HostApplication
 
 				services.AddSingleton<MainWindow>();
 				services.AddSingleton<Setting>();
+				services.AddSingleton<SettingViewModel>();
 
 				services.AddSingleton<Tool>();
 				services.AddSingleton<ToolViewModel>();

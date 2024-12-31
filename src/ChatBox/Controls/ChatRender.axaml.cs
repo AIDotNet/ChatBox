@@ -85,7 +85,7 @@ namespace ChatBox.Controls
             AddHeaderControls(headerPanel, language, filePath, fencedCodeBlock);
 
             // 4. 渲染代码
-            var currentTheme = Application.Current.RequestedThemeVariant == ThemeVariant.Light
+            var currentTheme = Application.Current?.RequestedThemeVariant == ThemeVariant.Light
                 ? ThemeName.LightPlus
                 : ThemeName.DarkPlus;
 

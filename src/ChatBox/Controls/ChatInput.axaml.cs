@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Avalonia;
 using Avalonia.Controls.Notifications;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
@@ -283,6 +284,20 @@ public partial class ChatInput : UserControl
         if (sender is Button { Tag: FileModel file })
         {
             ViewModel.Files.Remove(file);
+        }
+    }
+
+    private void TextBox_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e is { Key: Key.Enter, KeyModifiers: KeyModifiers.None })
+        {
+            Submit(sender, e);
+        }
+        // 如果是Shift+Enter
+        else if (e is { Key: Key.Enter, KeyModifiers: KeyModifiers.Shift } && sender is TextBox textBox)
+        {
+            textBox.Text += Environment.NewLine;
+            textBox.CaretIndex = textBox.Text.Length;
         }
     }
 }

@@ -5,17 +5,37 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
-             x:Class="ChatBox.Controls.WorkspaceHeader">
+             x:Class="ChatBox.Controls.WorkspaceHeader"
+             x:DataType="viewModels:ChatViewModel">
     
     <Design.DataContext>
         <viewModels:ChatViewModel />
     </Design.DataContext>
     
     <StackPanel 
+        Background="Transparent"
         PointerPressed="OnPointerPressed">
-        <Grid ColumnDefinitions="*,Auto">
-            <Grid 
-                Margin="8"
+        <Grid ColumnDefinitions="Auto,*">
+            <Button
+                BorderThickness="0"
+                Margin="5,0,0,0"
+                BorderBrush="Transparent"
+                Background="Transparent"
+                Click="DockButton_Click"
+                >
+                <StackPanel>
+                    <controls:SymbolIcon
+                        ToolTip.Tip="贴合窗口右侧"
+                        IsVisible="{Binding IsRight}"
+                        Symbol="DockRight" />
+                    <controls:SymbolIcon
+                        ToolTip.Tip="恢复窗口"
+                        IsVisible="{Binding !IsRight}"
+                        Symbol="DockRightFilled" />
+                </StackPanel>
+            </Button>
+            <Grid
+                Grid.Column="1" Margin="8"
                 ColumnDefinitions="*,Auto"
                 Height="35">
                 <TextBlock
@@ -24,19 +44,6 @@
                     AI Chat
                 </TextBlock>
             </Grid>
-            
-            <Button
-                Grid.Column="1" ToolTip.Tip="隐藏当前窗口"
-                Background="Transparent"
-                BorderThickness="0"
-                Margin="0,0,5,0"
-                >
-                <controls:ImageIcon
-                    Margin="0,0,0,0"
-                    Height="16"
-                    Width="16"
-                    Source="../Assets/close.png" />
-            </Button>
         </Grid>
         <Border
             Height="1"
