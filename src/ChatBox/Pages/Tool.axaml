@@ -36,8 +36,7 @@
                     HorizontalAlignment="Right"
                     Margin="0,0,0,10">
             <controls1:Model
-                Margin="0,4,5,0"
-                Grid.Column="0">
+                Margin="0,4,5,0">
             </controls1:Model>
             <ComboBox Name="LanguageComboBox"
                       SelectedIndex="0"

@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 
 namespace ChatBox.Controls;
@@ -38,8 +39,8 @@ public partial class WorkspaceHeader : UserControl
     }
 
     private double _previousWidth;
-    private double _previousHeight;
     private PixelPoint _previousPosition;
+    private double _previousHeight;
 
     private void DockButton_Click(object? sender, RoutedEventArgs e)
     {
@@ -53,22 +54,35 @@ public partial class WorkspaceHeader : UserControl
             
             window.Topmost = false;
             window.Activate();
-            window.WindowState = WindowState.Normal;
+            window.WindowState = WindowState.Minimized;
             ViewModel.IsRight = false;
             
+            var screen = window.Screens.ScreenFromVisual(window);
+            if (screen != null)
+            {
+                window.Height = _previousHeight;
+            }
+            
+            Task.Delay(10).ContinueWith(_ =>
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    window.WindowState = WindowState.Normal;
+                });
+            });
             
         }
         else
         {
             // Save the current size and position
             _previousWidth = window.Width;
-            _previousHeight = window.Height;
             _previousPosition = window.Position;
 
             // Dock the window to the right side of the screen
             var screen = window.Screens.ScreenFromVisual(window);
             if (screen != null)
             {
+                _previousHeight = window.Height;
                 // 宽度跟随屏幕宽度，计算。如果是 16:9 屏幕，可以直接设置宽度为 屏幕的 1/4 ，如果是 4:3 屏幕，可以设置为 1/3
                 if (screen.Bounds.Width / screen.Bounds.Height == 16 / 9)
                 {

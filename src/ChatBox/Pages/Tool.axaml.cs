@@ -41,9 +41,10 @@ public partial class Tool : UserControl
         }
     }
 
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    protected override void OnDataContextChanged(EventArgs e)
     {
-        base.OnApplyTemplate(e);
+        base.OnDataContextChanged(e);
+        
         ViewModel.TranslatedLanguages.Add(new TranslatedLanguageModel()
         {
             Language = "英文",
