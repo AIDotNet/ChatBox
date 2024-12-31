@@ -21,7 +21,7 @@
         <PackageReference Include="Dapper" Version="2.1.35" />
         <PackageReference Include="Dapper.AOT" Version="1.0.31" />
         <PackageReference Include="FluentAvaloniaUI" Version="2.2.0" />
-        <PackageReference Include="MarkdownAIRender" Version="0.1.12" />
+        <PackageReference Include="MarkdownAIRender" Version="0.1.13" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.32.0" />
@@ -67,6 +67,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Markdown.AIRender\src\MarkdownAIRender\MarkdownAIRender.csproj" />
       <ProjectReference Include="..\ChatBox.Logger\ChatBox.Logger.csproj" />
     </ItemGroup>
 </Project>

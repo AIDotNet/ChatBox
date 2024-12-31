@@ -196,12 +196,12 @@ public partial class ChatInput : UserControl
                     bot.Content += item.Content;
 
                     token++;
-                    if (token == 4 || isfirst)
+                    if (token == 5 || isfirst)
                     {
                         await Dispatcher.UIThread.InvokeAsync(() => { botView.Content = bot.Content; });
                         isfirst = false;
                     }
-                    else if (token == 6)
+                    else if (token == 10)
                     {
                         token = 0;
                         Dispatcher.UIThread.Invoke(() =>

@@ -22,6 +22,9 @@
         <sty:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
         <StyleInclude Source="avares://ChatBox/Styling/ControlsGalleryStyles.axaml" />
         <StyleInclude Source="avares://MarkdownAIRender/Index.axaml" />
-        
+
+		<Style Selector="SelectableTextBlock">
+			<Setter Property="FontSize" Value="12" />
+		</Style>
     </Application.Styles>
 </Application>

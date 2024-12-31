@@ -263,12 +263,12 @@ public partial class WorkspaceConversation : UserControl
                         bot.Content += item.Content;
 
                         token++;
-                        if (token == 4 || isfirst)
+                        if (token == 5 || isfirst)
                         {
                             await Dispatcher.UIThread.InvokeAsync(() => { botView.Content = bot.Content; });
                             isfirst = false;
                         }
-                        else if (token == 7)
+                        else if (token == 10)
                         {
                             token = 0;
                             await Dispatcher.UIThread.InvokeAsync(() =>
