@@ -32,12 +32,7 @@ public partial class Setting : UserControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        _notificationManager = new WindowNotificationManager(HostApplication.Services.GetService<MainWindow>())
-        {
-            Position = NotificationPosition.TopRight,
-            MaxItems = 4,
-            Margin = new Thickness(0, 0, 15, 40)
-        };
+        _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
     }
 
     private SettingViewModel ViewModel => (SettingViewModel)DataContext;

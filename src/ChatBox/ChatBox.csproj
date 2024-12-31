@@ -4,6 +4,7 @@
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <InterceptorsNamespaces>$(InterceptorsNamespaces);Dapper.AOT</InterceptorsNamespaces>
     </PropertyGroup>
 
     <ItemGroup>

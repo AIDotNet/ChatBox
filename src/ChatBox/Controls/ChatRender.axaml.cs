@@ -36,12 +36,7 @@ namespace ChatBox.Controls
         {
             base.OnApplyTemplate(e);
 
-            _notificationManager = new WindowNotificationManager(HostApplication.Services.GetService<MainWindow>())
-            {
-                Position = NotificationPosition.TopRight,
-                MaxItems = 4,
-                Margin = new Thickness(0, 0, 15, 40)
-            };
+            _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -138,8 +133,7 @@ namespace ChatBox.Controls
 
             copyButton.Click += (sender, e) =>
             {
-                var window = HostApplication.Services.GetService<MainWindow>();
-                window.Clipboard?.SetTextAsync(codeContent);
+                TopLevel.GetTopLevel(HostApplication.Services.GetService<MainView>())!.Clipboard?.SetTextAsync(codeContent);
                 _notificationManager?.Show(new Notification(
                     "已复制",
                     "代码已复制到剪贴板",
