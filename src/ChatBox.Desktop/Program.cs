@@ -1,7 +1,9 @@
 ﻿using Avalonia;
 using System;
 using ChatBox.Service;
-
+#if DEBUG
+using Nlnet.Avalonia.DevTools;
+#endif
 namespace ChatBox.Desktop;
 
 sealed class Program
@@ -65,6 +67,9 @@ sealed class Program
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
+#if DEBUG
+            .UseDevToolsForAvalonia()
+#endif
             .WithInterFont()
             .LogToTrace();
 }
