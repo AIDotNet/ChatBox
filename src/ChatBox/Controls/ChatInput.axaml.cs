@@ -55,12 +55,7 @@ public partial class ChatInput : UserControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        _notificationManager = new WindowNotificationManager(HostApplication.Services.GetService<MainWindow>())
-        {
-            Position = NotificationPosition.TopRight,
-            MaxItems = 4,
-            Margin = new Thickness(0, 0, 15, 40)
-        };
+        _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
     }
 
 
@@ -255,19 +250,18 @@ public partial class ChatInput : UserControl
 
     private async void OpenFile(object? sender, RoutedEventArgs e)
     {
-        var _target = HostApplication.Services.GetService<MainWindow>();
-        var files = await _target.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
+        var files = await TopLevel.GetTopLevel(this).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             Title = "请选择文件",
             AllowMultiple = true,
             FileTypeFilter = new[] { CodeAll, FilePickerFileTypes.TextPlain }
         });
-
+        
         if (files.Count == 0)
         {
             return;
         }
-
+        
         foreach (var file in files)
         {
             ViewModel.Files.Add(new FileModel()

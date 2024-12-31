@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0-ios</TargetFramework>
+        <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ChatBox\ChatBox.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia.iOS" Version="11.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <BundleResource Include="..\ChatBox\i18n\ChatBoxMarkdown.zh-Hant.xml">
+            <Link>Resources\i18n\ChatBoxMarkdown.zh-Hant.xml</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </BundleResource>
+        <BundleResource Include="..\ChatBox\models.json">
+            <Link>Resources\models.json</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </BundleResource>
+    </ItemGroup>
+
+</Project>

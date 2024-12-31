@@ -8,36 +8,15 @@ namespace ChatBox.Service;
 public class SettingService
 {
     private readonly string _settingConfig = ConstantPath.ChatSettingPath;
-
+    private Action? _settingCallback;
+    
     /// <summary>
     /// 监听_settingConfig文件的变化
     /// </summary>
     /// <param name="settingModel"></param>
     public void FileChange(Action settingModel)
     {
-        var path = new FileInfo(_settingConfig);
-
-        if (path.Directory?.Exists == false)
-        {
-            path.Directory.Create();
-        }
-
-        // 监听文件变化
-        var watcher = new FileSystemWatcher(path.DirectoryName ?? throw new InvalidOperationException(), path.Name)
-        {
-            EnableRaisingEvents = true,
-            NotifyFilter = NotifyFilters.LastWrite,
-            Filter = path.Name
-        };
-
-        watcher.Changed += (sender, args) =>
-        {
-            settingModel.Invoke();
-
-            watcher.EnableRaisingEvents = false;
-
-            watcher.Dispose();
-        };
+        _settingCallback = settingModel;
     }
 
     public void SaveSetting(SettingModel settingModel)
@@ -52,6 +31,8 @@ public class SettingService
         var content = JsonSerializer.Serialize(settingModel, AppJsonSerialize.SerializerOptions);
 
         File.WriteAllText(_settingConfig, content);
+        
+        _settingCallback?.Invoke();
     }
 
     public void InitSetting(string token)

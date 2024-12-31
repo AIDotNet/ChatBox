@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Avalonia.Platform.Storage;
+using ChatBox.Views;
 
 namespace ChatBox.Desktop;
 
@@ -38,11 +40,8 @@ public class CrossPlatformCustomProtocolHelper
         var url = CustomProtocol + "://callback";
         // 打开https://api.token-ai.cn/login?redirect_uri=chatbox://callback
         // 会调用默认浏览器打开 URL
-        var process = new System.Diagnostics.Process();
-        // 使用默认浏览器打开
-        process.StartInfo.UseShellExecute = true;
-        process.StartInfo.FileName = "https://api.token-ai.cn/login?redirect_uri=" + url;
-        process.Start();
+        var launcher = TopLevel.GetTopLevel(HostApplication.Services.GetRequiredService<MainView>())!.Launcher;
+        launcher.LaunchUriAsync(new Uri("https://api.token-ai.cn/login?redirect_uri=" + url));
     }
 
     /// <summary>
