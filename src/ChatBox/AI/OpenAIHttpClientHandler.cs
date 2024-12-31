@@ -15,10 +15,10 @@ public class OpenAIHttpClientHandler : HttpClientHandler
         if (response.StatusCode == HttpStatusCode.Unauthorized)
         {
             // 如果返回401，清空ApiKey
-            var settings = HostApplication.Services.GetRequiredService<SettingService>().LoadSetting();
+            var settings = HostApplication.Services.GetRequiredService<ISettingService>().LoadSetting();
 
             settings.ApiKey = string.Empty;
-            HostApplication.Services.GetRequiredService<SettingService>().SaveSetting(settings);
+            HostApplication.Services.GetRequiredService<ISettingService>().SaveSetting(settings);
 
             HostApplication.Logout?.Invoke();
         }

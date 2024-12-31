@@ -3,6 +3,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls.Notifications;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
 using ChatBox.AI;
@@ -133,7 +134,7 @@ namespace ChatBox.Controls
 
             copyButton.Click += (sender, e) =>
             {
-                TopLevel.GetTopLevel(HostApplication.Services.GetService<MainView>())!.Clipboard?.SetTextAsync(codeContent);
+                HostApplication.Services.GetRequiredService<IClipboard>().SetTextAsync(codeContent);
                 _notificationManager?.Show(new Notification(
                     "已复制",
                     "代码已复制到剪贴板",

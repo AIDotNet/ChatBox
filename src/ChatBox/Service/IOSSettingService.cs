@@ -5,16 +5,16 @@ using ChatBox.Models;
 
 namespace ChatBox.Service;
 
-public class SettingService
+public class IOSSettingService : ISettingService
 {
     private readonly string _settingConfig = ConstantPath.ChatSettingPath;
     private Action? _settingCallback;
-    
+
     /// <summary>
     /// 监听_settingConfig文件的变化
     /// </summary>
     /// <param name="settingModel"></param>
-    public void FileChange(Action settingModel)
+    public void UpdateCallback(Action settingModel)
     {
         _settingCallback = settingModel;
     }
@@ -31,7 +31,7 @@ public class SettingService
         var content = JsonSerializer.Serialize(settingModel, AppJsonSerialize.SerializerOptions);
 
         File.WriteAllText(_settingConfig, content);
-        
+
         _settingCallback?.Invoke();
     }
 

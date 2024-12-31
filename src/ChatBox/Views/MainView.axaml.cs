@@ -19,7 +19,7 @@ namespace ChatBox.Views;
 
 public partial class MainView : UserControl
 {
-    private readonly SettingService _settingService;
+    private readonly ISettingService _settingService;
     private WindowNotificationManager? _notificationManager;
 
     public MainView()
@@ -27,7 +27,7 @@ public partial class MainView : UserControl
         InitializeComponent();
 
         DataContext = HostApplication.Services.GetRequiredService<MainViewModel>();
-        _settingService = HostApplication.Services.GetRequiredService<SettingService>();
+        _settingService = HostApplication.Services.GetRequiredService<ISettingService>();
         
         HostApplication.Logout += () =>
         {
@@ -72,7 +72,7 @@ public partial class MainView : UserControl
     {
         CrossPlatformCustomProtocolHelper.OpenCustomProtocolUrl();
 
-        _settingService.FileChange(() =>
+        _settingService.UpdateCallback(() =>
         {
             Dispatcher.UIThread.Invoke(() =>
             {
