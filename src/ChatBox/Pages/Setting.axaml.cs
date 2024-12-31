@@ -3,7 +3,9 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using ChatBox.Service;
 using ChatBox.ViewModels;
 using ChatBox.Views;
@@ -62,5 +64,27 @@ public partial class Setting : UserControl
         var item = models.FirstOrDefault(x => x.Id == ViewModel.Setting.Type);
 
         ViewModel.SelectedModelProvider = item ?? models.FirstOrDefault();
+    }
+
+    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        // 获取当前窗口并调用 BeginMoveDrag
+        var window = this.GetVisualRoot() as Window;
+        if (window != null)
+        {
+            window.BeginMoveDrag(e);
+        }
+    }
+
+    private void Logout(object? sender, RoutedEventArgs e)
+    {
+        // 如果返回401，清空ApiKey
+        var settings = HostApplication.Services.GetRequiredService<ISettingService>().LoadSetting();
+
+        settings.ApiKey = string.Empty;
+        HostApplication.Services.GetRequiredService<ISettingService>().SaveSetting(settings);
+
+        HostApplication.Logout?.Invoke();
+
     }
 }

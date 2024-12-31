@@ -4,14 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ChatBox.Controls.ChatWelcome">
-    <Grid>
-        <TextBlock
+    <StackPanel>
+        <SelectableTextBlock
             FontSize="24"
-            Margin="0,60,0,0"
+            Margin="0,120,0,0"
             VerticalAlignment="Center"
             TextWrapping="Wrap"
             HorizontalAlignment="Center">
             嗨🖖，我是 AI Chat！欢迎使用AI Chat！
-        </TextBlock>
-    </Grid>
+        </SelectableTextBlock>
+        <Line></Line>
+        <SelectableTextBlock
+            FontSize="16"
+            Margin="0,100,0,0"
+            VerticalAlignment="Center"
+            TextWrapping="Wrap"
+            HorizontalAlignment="Center">
+            请在输入框输入您的问题，我会尽力回答您的问题！
+        </SelectableTextBlock>
+        
+    </StackPanel>
 </UserControl>
