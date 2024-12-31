@@ -6,5 +6,5 @@ public class MenuKeys
     
     public const string MenuKeyTool = "Tool";
     
-    public const string MenuKeySetting = "Setting";
+    public const string MenuKeySetting = "Settings";
 }

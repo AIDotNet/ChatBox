@@ -10,9 +10,11 @@ static class Program
 {
     public static void Main(string[] args)
     {
+        AppDomain.CurrentDomain.SetData("APP_CONTEXT_BASE_DIRECTORY", Directory.GetCurrentDirectory());
         try
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledException;
+            HostApplication.Builder();
             NSApplication.Init();
             NSApplication.SharedApplication.Delegate = new AppDelegate();
             NSApplication.Main(args);

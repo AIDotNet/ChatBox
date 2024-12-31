@@ -7,28 +7,40 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AIDotNet.AutoGpt" Version="1.0.10" />
-        <PackageReference Include="Avalonia" Version="11.2.3" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3" />
+        <PackageReference Include="AIDotNet.AutoGpt" Version="1.0.10"/>
+        <PackageReference Include="Avalonia" Version="11.2.3"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="Dapper" Version="2.1.35" />
-        <PackageReference Include="Dapper.AOT" Version="1.0.31" />
-        <PackageReference Include="FluentAvaloniaUI" Version="2.2.0" />
-        <PackageReference Include="MarkdownAIRender" Version="0.1.12" />
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.32.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.32.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.32.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.32.0-alpha" />
-        <PackageReference Include="SharpToken" Version="2.0.3" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
+        <PackageReference Include="Dapper" Version="2.1.35"/>
+        <PackageReference Include="Dapper.AOT" Version="1.0.31"/>
+        <PackageReference Include="FluentAvaloniaUI" Version="2.2.0"/>
+        <PackageReference Include="MarkdownAIRender" Version="0.1.12"/>
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.32.0"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.32.0"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.32.0"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.32.0-alpha"/>
+        <PackageReference Include="SharpToken" Version="2.0.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="system.md">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="i18n\ChatBoxMarkdown.zh-Hant.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="models.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -37,36 +49,30 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>Language.tt</DependentUpon>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="system.md">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
         <None Update="i18n\Language.tt">
             <Generator>TextTemplatingFileGenerator</Generator>
             <LastGenOutput>Language.cs</LastGenOutput>
         </None>
-        <None Update="i18n\ChatBoxMarkdown.zh-Hant.xml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Compile Update="Controls\ActionBar\ActionBar.axaml.cs">
-        <DependentUpon>ActionBar.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <UpToDateCheckInput Remove="Controls\RenderMarkdown\RenderMarkdown.axaml" />
+        <BundleResource Include="system.md"/>
+        <BundleResource Include="i18n\ChatBoxMarkdown.zh-Hant.xml"/>
+        <BundleResource Include="models.json"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ChatBox.Logger\ChatBox.Logger.csproj" />
+        <Compile Update="Controls\ActionBar\ActionBar.axaml.cs">
+            <DependentUpon>ActionBar.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <UpToDateCheckInput Remove="Controls\RenderMarkdown\RenderMarkdown.axaml"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ChatBox.Logger\ChatBox.Logger.csproj"/>
     </ItemGroup>
 </Project>
