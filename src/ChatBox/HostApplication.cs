@@ -1,5 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls.Notifications;
+using Avalonia.Input.Platform;
+using Avalonia.Platform.Storage;
 using ChatBox.AI;
 using ChatBox.Logger;
 using ChatBox.Pages;
@@ -72,62 +74,72 @@ public class HostApplication
                 services.AddSingleton<MainViewModel>();
                 services.AddSingleton<ChatViewModel>();
 
-				services.AddSingleton<MainWindow>();
-				services.AddSingleton<Setting>();
-				services.AddSingleton<SettingViewModel>();
+                services.AddSingleton<MainWindow>();
+                services.AddSingleton<Setting>();
+                services.AddSingleton<SettingViewModel>();
                 if (OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ||
                     OperatingSystem.IsMacCatalyst() || OperatingSystem.IsLinux())
                 {
                     services.AddSingleton<MainWindow>();
-                    services.AddSingleton<WindowNotificationManager>(s => new WindowNotificationManager(s.GetRequiredService<MainWindow>())
-                    {
-                        Position = NotificationPosition.TopRight,
-                        MaxItems = 4,
-                        Margin = new Thickness(0, 0, 15, 40)
-                    });
+                    services.AddSingleton<IClipboard>(s => TopLevel.GetTopLevel(s.GetRequiredService<MainWindow>())!.Clipboard!);
+                    services.AddSingleton<ILauncher>(s => TopLevel.GetTopLevel(s.GetRequiredService<MainWindow>())!.Launcher);
+                    services.AddSingleton<WindowNotificationManager>(s =>
+                        new WindowNotificationManager(s.GetRequiredService<MainWindow>())
+                        {
+                            Position = NotificationPosition.TopRight,
+                            MaxItems = 4,
+                            Margin = new Thickness(0, 0, 15, 40)
+                        });
                 }
                 else
                 {
                     services.AddSingleton<MainView>();
-                    services.AddSingleton<WindowNotificationManager>(s => new WindowNotificationManager(TopLevel.GetTopLevel(s.GetRequiredService<MainView>()))
-                    {
-                        Position = NotificationPosition.TopRight,
-                        MaxItems = 4,
-                        Margin = new Thickness(0, 0, 15, 40)
-                    });
+                    services.AddSingleton<IClipboard>(s => TopLevel.GetTopLevel(s.GetRequiredService<MainView>())!.Clipboard!);
+                    services.AddSingleton<ILauncher>(s => TopLevel.GetTopLevel(s.GetRequiredService<MainView>())!.Launcher);
+                    services.AddSingleton<WindowNotificationManager>(s =>
+                        new WindowNotificationManager(TopLevel.GetTopLevel(s.GetRequiredService<MainView>()))
+                        {
+                            Position = NotificationPosition.TopRight,
+                            MaxItems = 4,
+                            Margin = new Thickness(0, 0, 15, 40)
+                        });
                 }
 
                 services.AddSingleton<Setting>();
 
-				services.AddSingleton<Tool>();
-				services.AddSingleton<ToolViewModel>();
+                services.AddSingleton<Tool>();
+                services.AddSingleton<ToolViewModel>();
 
-				services.AddSingleton<Chat>();
+                services.AddSingleton<Chat>();
 
-				services.AddSingleton<Lazy<DbContext>>((provider =>
-				{
-					return new Lazy<DbContext>(() => new DbContext());
-				}));
+                services.AddSingleton<Lazy<DbContext>>((provider =>
+                {
+                    return new Lazy<DbContext>(() => new DbContext());
+                }));
 
-				services.AddSingleton<ChatCompleteService>();
+                services.AddSingleton<ChatCompleteService>();
 
-				services.AddSingleton<SettingService>();
+                services.AddSingleton<ISettingService>(s =>
+                {
+                    if (OperatingSystem.IsIOS())
+                        return new IOSSettingService();
+                    else
+                        return new DesktopSettingService();
+                });
 
+                services.AddSingleton<TokenService>();
+                services.AddSingleton<ModelProviderService>();
 
-				services.AddSingleton<TokenService>();
-				services.AddSingleton<ModelProviderService>();
+                services.AddSingleton<ChatMessageRepository>();
+            }).ConfigureLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddChatBoxLogger();
+            })
+            .Build();
 
-				services.AddSingleton<ChatMessageRepository>();
-			}).ConfigureLogging(logging =>
-			{
-				logging.ClearProviders();
-				logging.AddChatBoxLogger();
-			})
+        _serviceProvider = host.Services;
 
-			.Build();
-
-		_serviceProvider = host.Services;
-
-		return host;
-	}
+        return host;
+    }
 }

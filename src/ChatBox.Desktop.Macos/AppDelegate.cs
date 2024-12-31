@@ -23,7 +23,7 @@ public class AppDelegate : NSApplicationDelegate
         var token =  CrossPlatformCustomProtocolHelper.ParseCustomProtocolArgs(urls.Select(u => u.AbsoluteString).Where(x=>!string.IsNullOrWhiteSpace(x)).ToArray()!);
         if (!string.IsNullOrWhiteSpace(token))
         {
-            var settingService = HostApplication.Services.GetRequiredService<SettingService>();
+            var settingService = HostApplication.Services.GetRequiredService<ISettingService>();
             settingService.InitSetting(token);
         }
     }

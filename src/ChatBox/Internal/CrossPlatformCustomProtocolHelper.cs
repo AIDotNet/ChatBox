@@ -39,21 +39,7 @@ public class CrossPlatformCustomProtocolHelper
     public static void OpenCustomProtocolUrl()
     {
         var url = CustomProtocol + "://callback";
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            // Windows
-            // 直接调用系统默认浏览器打开 URL
-            System.Diagnostics.Process.Start("https://api.token-ai.cn/login?redirect_uri=" + url);
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            System.Diagnostics.Process.Start("xdg-open", "https://api.token-ai.cn/login?redirect_uri=" + url);
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            var launcher = TopLevel.GetTopLevel(HostApplication.Services.GetRequiredService<MainView>())!.Launcher;
-            launcher.LaunchUriAsync(new Uri("https://api.token-ai.cn/login?redirect_uri=" + url));
-        }
+        HostApplication.Services.GetRequiredService<ILauncher>().LaunchUriAsync(new Uri("https://api.token-ai.cn/login?redirect_uri=" + url));
     }
 
     /// <summary>

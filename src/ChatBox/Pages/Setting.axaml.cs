@@ -43,7 +43,7 @@ public partial class Setting : UserControl
 
         setting.Type = ViewModel.SelectedModelProvider.Id;
 
-        HostApplication.Services.GetService<SettingService>()!.SaveSetting(setting);
+        HostApplication.Services.GetService<ISettingService>()!.SaveSetting(setting);
 
         _notificationManager?.Show(
             new Notification("保存成功", "设置保存成功", NotificationType.Success));
@@ -52,7 +52,7 @@ public partial class Setting : UserControl
     private void InitializeSetting()
     {
         ViewModel.ModelProvider.Clear();
-        ViewModel.Setting = HostApplication.Services.GetService<SettingService>()!.LoadSetting();
+        ViewModel.Setting = HostApplication.Services.GetService<ISettingService>()!.LoadSetting();
         var models = _modelProviderService.LoadModelProviders();
         foreach (var modelProvider in models)
         {

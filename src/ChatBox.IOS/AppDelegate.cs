@@ -33,7 +33,7 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
             var token =  CrossPlatformCustomProtocolHelper.ParseCustomProtocolArgs([uri]);
             if (!string.IsNullOrWhiteSpace(token))
             {
-                var settingService = HostApplication.Services.GetRequiredService<SettingService>();
+                var settingService = HostApplication.Services.GetRequiredService<ISettingService>();
                 settingService.InitSetting(token);
             }
         }
