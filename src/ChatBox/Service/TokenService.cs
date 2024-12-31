@@ -11,7 +11,7 @@ public class TokenService
     {
         FileInfo path;
         if (OperatingSystem.IsMacOS() || OperatingSystem.IsMacCatalyst())
-            path = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "Contents", "Resources", "models.json"));
+            path = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "Contents", "MonoBundle", "models.json"));
         else
             path = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "models.json"));
         if (!File.Exists(path.FullName))
