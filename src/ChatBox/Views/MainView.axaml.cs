@@ -20,7 +20,7 @@ namespace ChatBox.Views;
 public partial class MainView : UserControl
 {
     private readonly SettingService _settingService;
-    private WindowNotificationManager _notificationManager;
+    private WindowNotificationManager? _notificationManager;
 
     public MainView()
     {
@@ -44,12 +44,7 @@ public partial class MainView : UserControl
     {
         base.OnApplyTemplate(e);
 
-        _notificationManager = new WindowNotificationManager(HostApplication.Services.GetRequiredService<MainWindow>())
-        {
-            Position = NotificationPosition.TopRight,
-            MaxItems = 4,
-            Margin = new Thickness(0, 0, 15, 40)
-        };
+        _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
 
         var setting = _settingService.LoadSetting();
 
