@@ -69,7 +69,7 @@ public partial class ChatInput : UserControl
     /// </param>
     public async Task SendChatMessage(bool autoCallTool = false, bool isInference = false)
     {
-        if (string.IsNullOrEmpty(ViewModel.Message))
+        if (string.IsNullOrEmpty(ViewModel.Message) || ViewModel.IsGenerating)
         {
             return;
         }
@@ -222,7 +222,9 @@ public partial class ChatInput : UserControl
         catch (Exception e)
         {
             _notificationManager?.Show(
-                new Notification(I18nManager.Instance.GetResource(Localization.Controls.ChatInput.ErrorNotificationTitle), e.Message, NotificationType.Error));
+                new Notification(
+                    I18nManager.Instance.GetResource(Localization.Controls.ChatInput.ErrorNotificationTitle), e.Message,
+                    NotificationType.Error));
         }
     }
 
@@ -257,12 +259,12 @@ public partial class ChatInput : UserControl
             AllowMultiple = true,
             FileTypeFilter = new[] { CodeAll, FilePickerFileTypes.TextPlain }
         });
-        
+
         if (files.Count == 0)
         {
             return;
         }
-        
+
         foreach (var file in files)
         {
             ViewModel.Files.Add(new FileModel()
@@ -282,17 +284,11 @@ public partial class ChatInput : UserControl
         }
     }
 
-    private void TextBox_KeyDown(object? sender, KeyEventArgs e)
+    private void TextBox_KeyUp(object? sender, KeyEventArgs e)
     {
         if (e is { Key: Key.Enter, KeyModifiers: KeyModifiers.None })
         {
             Submit(sender, e);
-        }
-        // 如果是Shift+Enter
-        else if (e is { Key: Key.Enter, KeyModifiers: KeyModifiers.Shift } && sender is TextBox textBox)
-        {
-            textBox.Text += Environment.NewLine;
-            textBox.CaretIndex = textBox.Text.Length;
         }
     }
 }

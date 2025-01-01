@@ -35,9 +35,9 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=D:\GitHub\ChatBox\outpu
-OutputBaseFilename=win-64-framework
-SetupIconFile=D:\GitHub\ChatBox\favicon.ico
+OutputDir=D:\Avalonia\ChatBox\outpu
+OutputBaseFilename=win-64
+SetupIconFile=D:\Avalonia\ChatBox\favicon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -49,9 +49,9 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\GitHub\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\GitHub\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-x64\i18n\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\GitHub\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Avalonia\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Avalonia\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-x64\i18n\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Avalonia\ChatBox\src\ChatBox.Desktop\bin\Release\net9.0\publish\win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
