@@ -4,8 +4,10 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using AvaloniaXmlTranslator;
+using Avalonia.VisualTree;
 using ChatBox.Service;
 using ChatBox.ViewModels;
 using ChatBox.Views;
@@ -34,12 +36,7 @@ public partial class Setting : UserControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        _notificationManager = new WindowNotificationManager(HostApplication.Services.GetService<MainWindow>())
-        {
-            Position = NotificationPosition.TopRight,
-            MaxItems = 4,
-            Margin = new Thickness(0, 0, 15, 40)
-        };
+        _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
     }
 
     private SettingViewModel ViewModel => (SettingViewModel)DataContext;
@@ -55,7 +52,7 @@ public partial class Setting : UserControl
             I18nManager.Instance.Culture = new CultureInfo(setting.Language);
         }
 
-        HostApplication.Services.GetService<SettingService>()!.SaveSetting(setting);
+        HostApplication.Services.GetService<ISettingService>()!.SaveSetting(setting);
 
         _notificationManager?.Show(
             new Notification(I18nManager.Instance.GetResource(Localization.Pages.Setting.SaveSuccessNotificationTitle), I18nManager.Instance.GetResource(Localization.Pages.Setting.SaveSuccessNotificationMessage), NotificationType.Success));
@@ -64,7 +61,7 @@ public partial class Setting : UserControl
     private void InitializeSetting()
     {
         ViewModel.ModelProvider.Clear();
-        ViewModel.Setting = HostApplication.Services.GetService<SettingService>()!.LoadSetting();
+        ViewModel.Setting = HostApplication.Services.GetService<ISettingService>()!.LoadSetting();
         var models = _modelProviderService.LoadModelProviders();
         foreach (var modelProvider in models)
         {
@@ -74,5 +71,27 @@ public partial class Setting : UserControl
         var item = models.FirstOrDefault(x => x.Id == ViewModel.Setting.Type);
 
         ViewModel.SelectedModelProvider = item ?? models.FirstOrDefault();
+    }
+
+    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        // 获取当前窗口并调用 BeginMoveDrag
+        var window = this.GetVisualRoot() as Window;
+        if (window != null)
+        {
+            window.BeginMoveDrag(e);
+        }
+    }
+
+    private void Logout(object? sender, RoutedEventArgs e)
+    {
+        // 如果返回401，清空ApiKey
+        var settings = HostApplication.Services.GetRequiredService<ISettingService>().LoadSetting();
+
+        settings.ApiKey = string.Empty;
+        HostApplication.Services.GetRequiredService<ISettingService>().SaveSetting(settings);
+
+        HostApplication.Logout?.Invoke();
+
     }
 }

@@ -27,6 +27,18 @@ public class ChatViewModel : ModelListViewModel
 		
 		CurrentModel = ModelList.FirstOrDefault();
 	}
+	
+	/// <summary>
+	/// 是否贴右边
+	/// </summary>
+	/// <returns></returns>
+	private bool _isRight = false;
+	
+	public bool IsRight
+	{
+		get => _isRight;
+		set => SetProperty(ref _isRight, value);
+	}
 
 	private string _message;
 

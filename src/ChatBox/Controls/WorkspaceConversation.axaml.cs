@@ -30,12 +30,7 @@ public partial class WorkspaceConversation : UserControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        _notificationManager = new WindowNotificationManager(HostApplication.Services.GetService<MainWindow>())
-        {
-            Position = NotificationPosition.TopRight,
-            MaxItems = 3,
-            Margin = new Thickness(0, 0, 15, 40)
-        };
+        _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
     }
 
     protected override async void OnDataContextChanged(EventArgs e)

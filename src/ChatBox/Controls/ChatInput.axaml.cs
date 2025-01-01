@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Avalonia;
 using Avalonia.Controls.Notifications;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
@@ -55,12 +56,7 @@ public partial class ChatInput : UserControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        _notificationManager = new WindowNotificationManager(HostApplication.Services.GetService<MainWindow>())
-        {
-            Position = NotificationPosition.TopRight,
-            MaxItems = 4,
-            Margin = new Thickness(0, 0, 15, 40)
-        };
+        _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
     }
 
 
@@ -255,19 +251,18 @@ public partial class ChatInput : UserControl
 
     private async void OpenFile(object? sender, RoutedEventArgs e)
     {
-        var _target = HostApplication.Services.GetService<MainWindow>();
-        var files = await _target.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
+        var files = await TopLevel.GetTopLevel(this).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             Title = I18nManager.Instance.GetResource(Localization.Controls.ChatInput.ChoiceFileTitle),
             AllowMultiple = true,
             FileTypeFilter = new[] { CodeAll, FilePickerFileTypes.TextPlain }
         });
-
+        
         if (files.Count == 0)
         {
             return;
         }
-
+        
         foreach (var file in files)
         {
             ViewModel.Files.Add(new FileModel()
@@ -284,6 +279,20 @@ public partial class ChatInput : UserControl
         if (sender is Button { Tag: FileModel file })
         {
             ViewModel.Files.Remove(file);
+        }
+    }
+
+    private void TextBox_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e is { Key: Key.Enter, KeyModifiers: KeyModifiers.None })
+        {
+            Submit(sender, e);
+        }
+        // 如果是Shift+Enter
+        else if (e is { Key: Key.Enter, KeyModifiers: KeyModifiers.Shift } && sender is TextBox textBox)
+        {
+            textBox.Text += Environment.NewLine;
+            textBox.CaretIndex = textBox.Text.Length;
         }
     }
 }

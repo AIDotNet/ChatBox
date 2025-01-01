@@ -15,7 +15,7 @@ using ChatMessage = ChatBox.Models.ChatMessage;
 
 namespace ChatBox.AI;
 
-public class ChatCompleteService(SettingService settingService, TokenService tokenService)
+public class ChatCompleteService(ISettingService settingService, TokenService tokenService)
 {
     public ChatMessagePlugin? GetPlugin(string modelId, string name)
     {

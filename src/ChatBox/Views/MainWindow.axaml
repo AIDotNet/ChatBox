@@ -14,10 +14,17 @@
         MinHeight="450"
         MinWidth="380"
         x:Class="ChatBox.Views.MainWindow"
+        RequestedThemeVariant="Dark"
         TransparencyLevelHint="AcrylicBlur"
+        ExtendClientAreaTitleBarHeightHint="50"
         ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="Default, PreferSystemChrome, OSXThickTitleBar"
         WindowStartupLocation="CenterScreen"
-        ExtendClientAreaChromeHints="SystemChrome"
+        SystemDecorations="BorderOnly"
+        RenderOptions.BitmapInterpolationMode="HighQuality"
+        RenderOptions.TextRenderingMode="SubpixelAntialias"
+        RenderOptions.RequiresFullOpacityHandling="True"
+        Focusable="True"
         Icon="/Assets/favicon.ico"
         Title="{markup:I18n {x:Static language:MainWindow.Title}}">
     <views:MainView />

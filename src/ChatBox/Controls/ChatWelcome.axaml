@@ -6,13 +6,22 @@
              xmlns:language="clr-namespace:Localization.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ChatBox.Controls.ChatWelcome">
-    <Grid>
-        <TextBlock
+    <StackPanel>
+        <SelectableTextBlock
             FontSize="24"
-            Margin="0,60,0,0"
+            Margin="0,120,0,0"
             VerticalAlignment="Center"
             TextWrapping="Wrap"
             HorizontalAlignment="Center" 
             Text="{markup:I18n {x:Static language:ChatWelcome.WelcomeContent}}"/>
-    </Grid>
+        <Line></Line>
+        <SelectableTextBlock
+            FontSize="16"
+            Margin="0,100,0,0"
+            VerticalAlignment="Center"
+            TextWrapping="Wrap"
+            HorizontalAlignment="Center"
+            Text="{markup:I18n {x:Static language:ChatWelcome.WelcomeUseMessage}}"/>
+        
+    </StackPanel>
 </UserControl>

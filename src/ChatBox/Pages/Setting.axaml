@@ -15,7 +15,9 @@
     </Design.DataContext>
 
     <StackPanel>
-        <Grid>
+        <Grid Background="Transparent"
+
+              PointerPressed="OnPointerPressed">
             <TextBlock
                 FontSize="24"
                 Margin="0,60,0,0"
@@ -28,7 +30,7 @@
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center"
               Width="400"
               Margin="20" ColumnDefinitions="Auto,*"
-              RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
             <TextBlock
                 Width="130"
                 Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10">
@@ -55,9 +57,15 @@
                 SelectedItem="{Binding SelectedLanguage}" />
 
             <Button Content="{markup:I18n {x:Static language:Setting.SaveButtonContent}}"
-                    Width="260"
+                    Width="260" Margin="0 10 0 0"
                     Grid.Row="4" Grid.Column="1"
                     Click="SaveSetting" />
+            <Button
+                Click="Logout"
+                Foreground="Red"
+                Margin="0,10,0,0"
+                Width="260" Grid.Row="5" Grid.Column="1"
+                Content="{markup:I18n {x:Static language:Setting.Logout}}"/>
         </Grid>
     </StackPanel>
 </UserControl>

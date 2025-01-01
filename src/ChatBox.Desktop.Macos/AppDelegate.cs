@@ -6,6 +6,7 @@ using Avalonia;
 using ChatBox.Constant;
 using ChatBox.Service;
 using Foundation;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ChatBox.Desktop;
 
@@ -22,8 +23,7 @@ public class AppDelegate : NSApplicationDelegate
         var token =  CrossPlatformCustomProtocolHelper.ParseCustomProtocolArgs(urls.Select(u => u.AbsoluteString).Where(x=>!string.IsNullOrWhiteSpace(x)).ToArray()!);
         if (!string.IsNullOrWhiteSpace(token))
         {
-            var settingService = new SettingService();
-
+            var settingService = HostApplication.Services.GetRequiredService<ISettingService>();
             settingService.InitSetting(token);
         }
     }

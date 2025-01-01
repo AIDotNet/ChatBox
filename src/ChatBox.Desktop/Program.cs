@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using System;
 using ChatBox.Service;
+using Microsoft.Extensions.DependencyInjection;
 #if DEBUG
 using Nlnet.Avalonia.DevTools;
 #endif
@@ -23,7 +24,7 @@ sealed class Program
 
             if (!string.IsNullOrEmpty(token))
             {
-                var settingService = new SettingService();
+                var settingService = HostApplication.Services.GetRequiredService<ISettingService>();
 
                 settingService.InitSetting(token);
 

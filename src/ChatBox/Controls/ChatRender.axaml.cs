@@ -3,6 +3,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls.Notifications;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
 using AvaloniaXmlTranslator;
@@ -38,12 +39,7 @@ namespace ChatBox.Controls
         {
             base.OnApplyTemplate(e);
 
-            _notificationManager = new WindowNotificationManager(HostApplication.Services.GetService<MainWindow>())
-            {
-                Position = NotificationPosition.TopRight,
-                MaxItems = 4,
-                Margin = new Thickness(0, 0, 15, 40)
-            };
+            _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -87,7 +83,7 @@ namespace ChatBox.Controls
             AddHeaderControls(headerPanel, language, filePath, fencedCodeBlock);
 
             // 4. 渲染代码
-            var currentTheme = Application.Current.RequestedThemeVariant == ThemeVariant.Light
+            var currentTheme = Application.Current?.RequestedThemeVariant == ThemeVariant.Light
                 ? ThemeName.LightPlus
                 : ThemeName.DarkPlus;
 
@@ -140,8 +136,7 @@ namespace ChatBox.Controls
 
             copyButton.Click += (sender, e) =>
             {
-                var window = HostApplication.Services.GetService<MainWindow>();
-                window.Clipboard?.SetTextAsync(codeContent);
+                HostApplication.Services.GetRequiredService<IClipboard>().SetTextAsync(codeContent);
                 _notificationManager?.Show(new Notification(
                     I18nManager.Instance.GetResource(Localization.Controls.ChatRender.CopySuccessNotificationTitle),
                     I18nManager.Instance.GetResource(Localization.Controls.ChatRender.CopySuccessNotificationMessage),

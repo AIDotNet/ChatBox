@@ -4,6 +4,7 @@ using Dapper;
 
 namespace ChatBox.DataAccess;
 
+[DapperAot]
 public class ChatMessageRepository(Lazy<DbContext> dbContext)
 {
     public async Task InsertAsync(ChatMessage message)

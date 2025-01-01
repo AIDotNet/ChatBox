@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using Avalonia.Platform.Storage;
+using ChatBox.Views;
 
 namespace ChatBox.Desktop;
 
@@ -36,13 +39,7 @@ public class CrossPlatformCustomProtocolHelper
     public static void OpenCustomProtocolUrl()
     {
         var url = CustomProtocol + "://callback";
-        // 打开https://api.token-ai.cn/login?redirect_uri=chatbox://callback
-        // 会调用默认浏览器打开 URL
-        var process = new System.Diagnostics.Process();
-        // 使用默认浏览器打开
-        process.StartInfo.UseShellExecute = true;
-        process.StartInfo.FileName = "https://api.token-ai.cn/login?redirect_uri=" + url;
-        process.Start();
+        HostApplication.Services.GetRequiredService<ILauncher>().LaunchUriAsync(new Uri("https://api.token-ai.cn/login?redirect_uri=" + url));
     }
 
     /// <summary>
@@ -65,7 +62,7 @@ public class CrossPlatformCustomProtocolHelper
             // HKEY_CLASSES_ROOT\chatbox\shell\open\command
             // (默认) = "ChatBox.Desktop.exe %1"
             var key = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(CustomProtocol);
-            
+
             key.SetValue("", "URL:ChatBox Protocol");
             key.SetValue("URL Protocol", "");
             key.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue("", $"\"{path}\" \"%1\"");
@@ -74,7 +71,6 @@ public class CrossPlatformCustomProtocolHelper
             // (默认) = "ChatBox.Desktop.exe,1"
             key = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(CustomProtocol).CreateSubKey("DefaultIcon");
             key.SetValue("", $"\"{path}\",1");
-
         }
         else if (OperatingSystem.IsLinux())
         {

@@ -29,7 +29,7 @@ public partial class Model : UserControl
 		{
 			ViewModel.Models.Add(model);
 		}
-		var settingService = HostApplication.Services.GetRequiredService<SettingService>();
+		var settingService = HostApplication.Services.GetRequiredService<ISettingService>();
 		ViewModel.ModelIdChanged += (model) =>
 		{
 			if (model != null)

@@ -5,7 +5,9 @@
              xmlns:controls="clr-namespace:ChatBox.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ChatBox.Controls.Workspace">
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid 
+        x:Name="WorkspaceGrid"
+        RowDefinitions="Auto,*,Auto">
         <controls:WorkspaceHeader />
         <controls:WorkspaceConversation Grid.Row="1" />
         <controls:ChatInput Grid.Row="2"></controls:ChatInput>

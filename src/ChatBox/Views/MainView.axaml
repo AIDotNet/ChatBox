@@ -16,7 +16,6 @@
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
-
     <Grid ColumnDefinitions="*">
         <controls:NavigationView AlwaysShowHeader="False"
                                  PaneDisplayMode="Left"

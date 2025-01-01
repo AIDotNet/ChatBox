@@ -8,7 +8,7 @@ using ChatBox.Models;
 
 namespace ChatBox.Service;
 
-public class SettingService
+public class DesktopSettingService : ISettingService
 {
     private readonly string _settingConfig = ConstantPath.ChatSettingPath;
     private const string DefaultLanguage = "zh-CN";
@@ -17,7 +17,7 @@ public class SettingService
     /// 监听_settingConfig文件的变化
     /// </summary>
     /// <param name="settingModel"></param>
-    public void FileChange(Action settingModel)
+    public void UpdateCallback(Action settingModel)
     {
         var path = new FileInfo(_settingConfig);
 

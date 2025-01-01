@@ -30,20 +30,20 @@ public partial class MainViewModel : ViewModelBase
         get => control;
         set => SetProperty(ref control, value);
     }
-    
+
     public void OnNavigation(MainViewModel vm, string s)
     {
         Control = s switch
         {
-            MenuKeys.MenuKeyAIChat => new ChatViewModel(),
-            MenuKeys.MenuKeyTool => new ToolViewModel(),
-            MenuKeys.MenuKeySetting => new SettingViewModel(),
+            MenuKeys.MenuKeyAIChat => HostApplication.Services.GetRequiredService<ChatViewModel>(),
+            MenuKeys.MenuKeyTool => HostApplication.Services.GetRequiredService<ToolViewModel>(),
+            MenuKeys.MenuKeySetting => HostApplication.Services.GetRequiredService<SettingViewModel>(),
             _ => throw new ArgumentOutOfRangeException(nameof(s), s, null)
         };
     }
-    
+
     private string _selectedNavMenu = MenuKeys.MenuKeyAIChat;
-    
+
     public string SelectedNavMenu
     {
         get => _selectedNavMenu;

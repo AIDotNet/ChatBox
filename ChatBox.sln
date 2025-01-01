@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBox.Logger", "src\ChatB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBox.Desktop.Macos", "src\ChatBox.Desktop.Macos\ChatBox.Desktop.Macos.csproj", "{39B84C7C-FAB8-4066-B5C4-AFB7FD81031C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBox.IOS", "src\ChatBox.IOS\ChatBox.IOS.csproj", "{0B3D5DA7-732D-4919-A755-E15633E5FB31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{39B84C7C-FAB8-4066-B5C4-AFB7FD81031C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39B84C7C-FAB8-4066-B5C4-AFB7FD81031C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39B84C7C-FAB8-4066-B5C4-AFB7FD81031C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B3D5DA7-732D-4919-A755-E15633E5FB31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B3D5DA7-732D-4919-A755-E15633E5FB31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B3D5DA7-732D-4919-A755-E15633E5FB31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B3D5DA7-732D-4919-A755-E15633E5FB31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,6 +57,7 @@ Global
 		{908453E7-9DAC-42C1-8B41-5199ECB5E785} = {40D887DE-CAB8-452F-90FE-BB3CF2B2613C}
 		{14CDEB6A-DB37-4A22-B0AC-B5117EF57DDB} = {40D887DE-CAB8-452F-90FE-BB3CF2B2613C}
 		{39B84C7C-FAB8-4066-B5C4-AFB7FD81031C} = {40D887DE-CAB8-452F-90FE-BB3CF2B2613C}
+		{0B3D5DA7-732D-4919-A755-E15633E5FB31} = {40D887DE-CAB8-452F-90FE-BB3CF2B2613C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9A2982A7-F084-41A2-ACD5-4C6DDA6F03C4}
