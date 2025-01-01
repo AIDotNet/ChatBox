@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using AvaloniaXmlTranslator;
 using Avalonia.VisualTree;
 using ChatBox.Service;
 using ChatBox.ViewModels;
@@ -44,11 +46,16 @@ public partial class Setting : UserControl
         var setting = ViewModel.Setting;
 
         setting.Type = ViewModel.SelectedModelProvider.Id;
+        if (setting.Language != ViewModel.SelectedLanguage?.CultureName)
+        {
+            setting.Language = ViewModel.SelectedLanguage?.CultureName;
+            I18nManager.Instance.Culture = new CultureInfo(setting.Language);
+        }
 
         HostApplication.Services.GetService<ISettingService>()!.SaveSetting(setting);
 
         _notificationManager?.Show(
-            new Notification("保存成功", "设置保存成功", NotificationType.Success));
+            new Notification(I18nManager.Instance.GetResource(Localization.Pages.Setting.SaveSuccessNotificationTitle), I18nManager.Instance.GetResource(Localization.Pages.Setting.SaveSuccessNotificationMessage), NotificationType.Success));
     }
 
     private void InitializeSetting()

@@ -6,6 +6,8 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
+using AvaloniaXmlTranslator;
+using AvaloniaXmlTranslator.Markup;
 using ChatBox.AI;
 using ChatBox.Views;
 using FluentAvalonia.UI.Controls;
@@ -125,19 +127,19 @@ namespace ChatBox.Controls
         {
             var copyButton = new Button
             {
-                Content = "复制",
                 FontSize = 12,
                 Height = 24,
                 Padding = new Thickness(3),
                 Margin = new Thickness(0)
             };
+            copyButton.Bind(Button.ContentProperty, new I18nBinding(Localization.Controls.ChatRender.CopyButonContent));
 
             copyButton.Click += (sender, e) =>
             {
                 HostApplication.Services.GetRequiredService<IClipboard>().SetTextAsync(codeContent);
                 _notificationManager?.Show(new Notification(
-                    "已复制",
-                    "代码已复制到剪贴板",
+                    I18nManager.Instance.GetResource(Localization.Controls.ChatRender.CopySuccessNotificationTitle),
+                    I18nManager.Instance.GetResource(Localization.Controls.ChatRender.CopySuccessNotificationMessage),
                     NotificationType.Success));
             };
 
@@ -148,19 +150,22 @@ namespace ChatBox.Controls
         {
             var applyButton = new Button
             {
-                Content = "应用代码",
                 FontSize = 12,
                 Height = 24,
                 Padding = new Thickness(3),
                 Margin = new Thickness(5, 0, 0, 0)
             };
+            applyButton.Bind(Button.ContentProperty,
+                new I18nBinding(Localization.Controls.ChatRender.ApplyButtonContent));
 
             applyButton.Click += async (sender, e) =>
             {
                 // 构建加载提示
                 var panel = new WrapPanel();
                 panel.Children.Add(new ProgressRing { Margin = new Thickness(1) });
-                panel.Children.Add(new TextBlock { Text = "应用中" });
+                var applyTxt = new TextBlock();
+                applyTxt.Bind(TextBlock.TextProperty, new I18nBinding(Localization.Controls.ChatRender.ApplyDoing));
+                panel.Children.Add(applyTxt);
                 applyButton.Content = panel;
 
                 try
@@ -185,14 +190,21 @@ namespace ChatBox.Controls
                         await _chatCompleteService.ApplyCode(info.FullName, codeText);
                     }
 
-                    applyButton.Content = new TextBlock { Text = "应用完成" };
+                    var applyCompleteTxt = new TextBlock();
+                    applyCompleteTxt.Bind(TextBlock.TextProperty,
+                        new I18nBinding(Localization.Controls.ChatRender.ApplyComplete));
+                    applyButton.Content = applyCompleteTxt;
                 }
                 catch (Exception ex)
                 {
-                    applyButton.Content = new TextBlock { Text = "应用失败" };
+                    var applyFailTxt = new TextBlock();
+                    applyFailTxt.Bind(TextBlock.TextProperty,
+                        new I18nBinding(Localization.Controls.ChatRender.ApplyFail));
+                    applyButton.Content = applyFailTxt;
                     _notificationManager?.Show(new Notification(
-                        "应用失败",
-                        "请检查代码是否正确" + Environment.NewLine + ex,
+                        I18nManager.Instance.GetResource(Localization.Controls.ChatRender.ApplyFail),
+                        I18nManager.Instance.GetResource(Localization.Controls.ChatRender.ApplyFailMessage) +
+                        Environment.NewLine + ex,
                         NotificationType.Error));
                 }
             };

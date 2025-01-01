@@ -32,6 +32,6 @@ public class SettingModel : ViewModelBase
             }
         }
     }
-    
-    
+
+    public string? Language { get; set; }
 }

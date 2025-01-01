@@ -1,5 +1,8 @@
+﻿using System.Globalization;
 using System.IO;
 using System.Text.Json;
+using AvaloniaXmlTranslator;
+using System.Threading;
 using ChatBox.Constant;
 using ChatBox.Models;
 
@@ -8,6 +11,7 @@ namespace ChatBox.Service;
 public class DesktopSettingService : ISettingService
 {
     private readonly string _settingConfig = ConstantPath.ChatSettingPath;
+    private const string DefaultLanguage = "zh-CN";
 
     /// <summary>
     /// 监听_settingConfig文件的变化
@@ -49,6 +53,8 @@ public class DesktopSettingService : ISettingService
             path.Directory.Create();
         }
 
+        I18nManager.Instance.Culture = new CultureInfo(settingModel.Language);
+
         var content = JsonSerializer.Serialize(settingModel, AppJsonSerialize.SerializerOptions);
 
         File.WriteAllText(_settingConfig, content);
@@ -73,5 +79,44 @@ public class DesktopSettingService : ISettingService
         var result = JsonSerializer.Deserialize<SettingModel>(content, AppJsonSerialize.SerializerOptions);
 
         return result;
+    }
+
+    public string GetCulture()
+    {
+        try
+        {
+            var setting = LoadSetting();
+            if (!string.IsNullOrWhiteSpace(setting.Language))
+            {
+                return setting.Language;
+            }
+
+            var currentCulture = Thread.CurrentThread.CurrentCulture.Name;
+            if (!string.IsNullOrWhiteSpace(currentCulture) &&
+                I18nManager.Instance.Resources.ContainsKey(currentCulture))
+            {
+                return currentCulture;
+            }
+
+            return DefaultLanguage;
+        }
+        catch (Exception ex)
+        {
+            return DefaultLanguage;
+        }
+    }
+
+    public void SetCulture(string culture)
+    {
+        try
+        {
+            var setting = LoadSetting();
+            setting.Language = culture;
+            SaveSetting(setting);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 }

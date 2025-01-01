@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:markup="https://codewf.com"
+             xmlns:language="clr-namespace:Localization.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
@@ -25,11 +27,11 @@
                 >
                 <StackPanel>
                     <controls:SymbolIcon
-                        ToolTip.Tip="贴合窗口右侧"
+                        ToolTip.Tip="{markup:I18n {x:Static language:WorkspaceHeader.FitToWindowRight}}"
                         IsVisible="{Binding IsRight}"
                         Symbol="DockRight" />
                     <controls:SymbolIcon
-                        ToolTip.Tip="恢复窗口"
+                        ToolTip.Tip="{markup:I18n {x:Static language:WorkspaceHeader.RestoreWindow}}"
                         IsVisible="{Binding !IsRight}"
                         Symbol="DockRightFilled" />
                 </StackPanel>
@@ -44,6 +46,19 @@
                     AI Chat
                 </TextBlock>
             </Grid>
+            
+            <Button
+                Grid.Column="1" ToolTip.Tip="{markup:I18n {x:Static language:WorkspaceHeader.HideButtonTip}}"
+                Background="Transparent"
+                BorderThickness="0"
+                Margin="0,0,5,0"
+                >
+                <controls:ImageIcon
+                    Margin="0,0,0,0"
+                    Height="16"
+                    Width="16"
+                    Source="../Assets/close.png" />
+            </Button>
         </Grid>
         <Border
             Height="1"

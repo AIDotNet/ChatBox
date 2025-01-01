@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls.Notifications;
 using Avalonia.Threading;
+using AvaloniaXmlTranslator;
 using ChatBox.AI;
 using ChatBox.Models;
 using ChatBox.Views;
@@ -99,7 +100,11 @@ public partial class WorkspaceConversation : UserControl
             clipboard?.SetTextAsync(message.Content);
 
             _notificationManager?.Show(
-                new Notification("复制成功", "消息已复制到剪贴板", NotificationType.Success));
+                new Notification(
+                    I18nManager.Instance.GetResource(Localization.Controls.WorkspaceConversation.CopyNotificationTitle),
+                    I18nManager.Instance.GetResource(
+                        Localization.Controls.WorkspaceConversation.CopyNotificationMessage),
+                    NotificationType.Success));
         }
     }
 
@@ -287,7 +292,9 @@ public partial class WorkspaceConversation : UserControl
             catch (Exception exception)
             {
                 _notificationManager?.Show(
-                    new Notification("错误", exception.Message, NotificationType.Error));
+                    new Notification(
+                        I18nManager.Instance.GetResource(Localization.Controls.WorkspaceConversation
+                            .ErrorNotificationTitle), exception.Message, NotificationType.Error));
             }
         }
     }

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Localization language="English" description="English" cultureName="en-US">
+	<App>
+		<MenuItemExitHeader>Exit the program</MenuItemExitHeader>
+		<MenuItemOpenMainWindowHeader>Display the main interface</MenuItemOpenMainWindowHeader>
+	</App>
+	<Controls>
+		<ChatEdit>
+			<Title>Edit Message</Title>
+			<OkButtonContent>Confirm</OkButtonContent>
+			<CancelButtonContent>Cancel</CancelButtonContent>
+		</ChatEdit>
+		<ChatInput>
+			<Submit>Submit</Submit>
+			<ErrorNotificationTitle>Error</ErrorNotificationTitle>
+			<ChoiceFileTitle>Please choose a file</ChoiceFileTitle>
+		</ChatInput>
+		<ChatRender>
+			<ExecutePluginLabel>Execute Plugin:</ExecutePluginLabel>
+			<ParamLabel>Parameter:</ParamLabel>
+			<DeleteButtonTip>Delete the current message</DeleteButtonTip>
+			<CopyButtonTip>Copy the current message</CopyButtonTip>
+			<EditButtonTip>Edit the current message</EditButtonTip>
+			<ReGenerateTip>Regenerate</ReGenerateTip>
+			<CopyButonContent>Copy</CopyButonContent>
+			<CopySuccessNotificationTitle>Copied</CopySuccessNotificationTitle>
+			<CopySuccessNotificationMessage>The code has been copied to the clipboard.</CopySuccessNotificationMessage>
+			<ApplyButtonContent>Apply Code</ApplyButtonContent>
+			<ApplyDoing>Applying</ApplyDoing>
+			<ApplyComplete>Application Completed</ApplyComplete>
+			<ApplyFail>Application Failed</ApplyFail>
+			<ApplyFailMessage>Please check whether the code is correct.</ApplyFailMessage>
+		</ChatRender>
+		<ChatWelcome>
+			<WelcomeContent>Hi 🖖, I'm AI Chat! Welcome to use AI Chat!</WelcomeContent>
+			<WelcomeUseMessage>Please enter your questions in the input box, and I will try my best to answer your questions!</WelcomeUseMessage>
+		</ChatWelcome>
+		<WorkspaceConversation>
+			<CopyNotificationTitle>Copy succeeded</CopyNotificationTitle>
+			<CopyNotificationMessage>The message has been copied to the clipboard.</CopyNotificationMessage>
+			<ErrorNotificationTitle>Error</ErrorNotificationTitle>
+		</WorkspaceConversation>
+		<WorkspaceHeader>
+			<FitToWindowRight>Fit to the right side of the window</FitToWindowRight>
+			<RestoreWindow>Restore the window</RestoreWindow>
+			<HideButtonTip>Hide the current window</HideButtonTip>
+		</WorkspaceHeader>
+	</Controls>
+	<Pages>
+		<Setting>
+			<Title>AI Chat Settings</Title>
+			<MaxTokenLabel>Max Token:</MaxTokenLabel>
+			<LanguageKey>Language</LanguageKey>
+			<LanguagePlaceholderText>Select a language</LanguagePlaceholderText>
+			<SaveButtonContent>Save</SaveButtonContent>
+			<SaveSuccessNotificationTitle>Save successfully</SaveSuccessNotificationTitle>
+			<SaveSuccessNotificationMessage>Settings saved successfully</SaveSuccessNotificationMessage>
+			<Logout>Log out</Logout>
+		</Setting>
+		<Tool>
+			<TranslateLabel>Translation tool</TranslateLabel>
+			<TranslateWatermark>Please enter the original text...</TranslateWatermark>
+		</Tool>
+	</Pages>
+	<Views>
+		<MainView>
+			<NavItemChatContent>AI Conversation</NavItemChatContent>
+			<NavItemToolContent>Tool</NavItemToolContent>
+			<NeedLoginText>Please log in to the system first.</NeedLoginText>
+			<LoginButtonContent>Log in</LoginButtonContent>
+			<loginSuccessNotificationTitle>Login successful</loginSuccessNotificationTitle>
+			<loginSuccessNotificationMessage>Login successful</loginSuccessNotificationMessage>
+		</MainView>
+		<MainWindow>
+			<Title>Intelligent Assistant</Title>
+		</MainWindow>
+	</Views>
+</Localization>

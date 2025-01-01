@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:markup="https://codewf.com"
+             xmlns:language="clr-namespace:Localization.Views"
              xmlns:vm="clr-namespace:ChatBox.ViewModels"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:chatBox="clr-namespace:ChatBox"
@@ -25,8 +27,8 @@
                                  IsPaneToggleButtonVisible="False"
                                  IsSettingsVisible="True">
             <controls:NavigationView.MenuItems>
-                <controls:NavigationViewItem Content="AI对话" Tag="AIChat" IconSource="Message" />
-                <controls:NavigationViewItem Content="工具" Tag="Tool" IconSource="AllApps" />
+                <controls:NavigationViewItem Content="{markup:I18n {x:Static language:MainView.NavItemChatContent}}" Tag="AIChat" IconSource="Message" />
+                <controls:NavigationViewItem Content="{markup:I18n {x:Static language:MainView.NavItemToolContent}}" Tag="Tool" IconSource="AllApps" />
             </controls:NavigationView.MenuItems>
             <controls:NavigationView.Content>
                 <ContentControl
@@ -40,8 +42,8 @@
 
         <Border PointerPressed="OnPointerPressed" Background="Black" Opacity="0.8" IsVisible="{Binding !IsLogin}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="请先登录在系统" Foreground="White" FontSize="24" />
-                <Button Content="登录"
+                <TextBlock Text="{markup:I18n {x:Static language:MainView.NeedLoginText}}" Foreground="White" FontSize="24" />
+                <Button Content="{markup:I18n {x:Static language:MainView.LoginButtonContent}}"
                         Width="170"
                         Click="Button_OnClick" Margin="0,8,0,0" />
             </StackPanel>
