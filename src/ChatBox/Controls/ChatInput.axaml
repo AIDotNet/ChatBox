@@ -21,12 +21,10 @@
             DeleteClick="DeleteButton_Click" />
         <TextBox Watermark="Ask me anything, I'm here to help!"
                  AcceptsTab="True"
-                 KeyUp="TextBox_KeyUp"
                  Height="130"
                  TextWrapping="WrapWithOverflow"
                  Text="{Binding Message, Mode=TwoWay}"
                  AcceptsReturn="True"
-                 
                  Grid.Row="1" Grid.Column="0" />
         <Border Grid.Row="2">
             <ItemsControl ItemsSource="{Binding Files}">

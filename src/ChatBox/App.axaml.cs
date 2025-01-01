@@ -7,6 +7,7 @@ using Avalonia.Platform;
 using AvaloniaXmlTranslator;
 using AvaloniaXmlTranslator.Markup;
 using ChatBox.Views;
+using MarkdownAIRender.Controls.MarkdownRender;
 
 namespace ChatBox;
 
@@ -19,6 +20,8 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+
+        MarkdownClass.ChangeTheme("Inkiness");
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             if (OperatingSystem.IsMacOS() || OperatingSystem.IsMacCatalyst())

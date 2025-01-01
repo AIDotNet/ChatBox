@@ -174,7 +174,7 @@ This is the complete code
                 }
             }
 
-            yield return new StreamingChatMessageContent(AuthorRole.Assistant, "> 开始思考");
+            yield return new StreamingChatMessageContent(AuthorRole.Assistant, "> 开始思考" + Environment.NewLine);
 
             await foreach (var make in autoGptClient.GenerateResponseAsync(chatMessages, setting.ApiKey, modelId,
                                setting.MaxToken, temperature))
