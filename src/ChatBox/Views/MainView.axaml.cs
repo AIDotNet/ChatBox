@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using AvaloniaXmlTranslator;
 using ChatBox.Desktop;
 using ChatBox.Pages;
 using ChatBox.Service;
@@ -28,14 +29,9 @@ public partial class MainView : UserControl
 
         DataContext = HostApplication.Services.GetRequiredService<MainViewModel>();
         _settingService = HostApplication.Services.GetRequiredService<SettingService>();
-        
-        HostApplication.Logout += () =>
-        {
-            Dispatcher.UIThread.Invoke(() =>
-            {
-                ViewModel.IsLogin = false;
-            });
-        };
+        _settingService.SetCulture(_settingService.GetCulture());
+
+        HostApplication.Logout += () => { Dispatcher.UIThread.Invoke(() => { ViewModel.IsLogin = false; }); };
     }
 
     private MainViewModel ViewModel => (MainViewModel)DataContext;
@@ -54,7 +50,7 @@ public partial class MainView : UserControl
         var setting = _settingService.LoadSetting();
 
         ViewModel.IsLogin = !string.IsNullOrEmpty(setting.ApiKey);
-        
+
         NavView.SelectedItem = NavView.MenuItems[0];
         NavView.FindControl<NavigationView>("");
     }
@@ -63,7 +59,7 @@ public partial class MainView : UserControl
     {
         if (e.SelectedItem is NavigationViewItem item)
         {
-            if (item.Tag.ToString().Equals("设置", StringComparison.OrdinalIgnoreCase))
+            if (item.Name?.Equals("SettingsItem", StringComparison.OrdinalIgnoreCase) == true)
             {
                 ViewModel.OnNavigation(ViewModel, MenuKeys.MenuKeySetting);
                 return;
@@ -83,7 +79,9 @@ public partial class MainView : UserControl
             {
                 // 登录成功
                 _notificationManager?.Show(
-                    new Notification("登录成功", "登录成功", NotificationType.Success));
+                    new Notification(
+                        I18nManager.Instance.GetResource(Localization.Views.MainView.loginSuccessNotificationTitle),
+                        I18nManager.Instance.GetResource(Localization.Views.MainView.loginSuccessNotificationMessage), NotificationType.Success));
 
                 ViewModel.IsLogin = true;
             });

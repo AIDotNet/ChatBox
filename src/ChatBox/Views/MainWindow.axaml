@@ -3,6 +3,8 @@
         xmlns:vm="using:ChatBox.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:markup="https://codewf.com"
+        xmlns:language="clr-namespace:Localization.Views"
         xmlns:views="clr-namespace:ChatBox.Views"
         mc:Ignorable="d" 
         d:DesignWidth="800"
@@ -17,6 +19,6 @@
         WindowStartupLocation="CenterScreen"
         ExtendClientAreaChromeHints="SystemChrome"
         Icon="/Assets/favicon.ico"
-        Title="智能助手">
+        Title="{markup:I18n {x:Static language:MainWindow.Title}}">
     <views:MainView />
 </Window>

@@ -2,42 +2,42 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:markup="https://codewf.com"
+             xmlns:language="clr-namespace:Localization.Controls"
              xmlns:vm="clr-namespace:ChatBox.ViewModels"
              xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              IsVisible="{Binding IsEditing}"
              x:Class="ChatBox.Controls.ChatEdit"
              x:DataType="vm:ChatMessageListViewModel">
-    
+
     <UserControl.DataContext>
         <viewModels:ChatMessageListViewModel />
     </UserControl.DataContext>
-    
+
     <StackPanel>
         <TextBox
-            Watermark="编辑消息"
+            Watermark="{markup:I18n {x:Static language:ChatEdit.Title}}"
             TextWrapping="WrapWithOverflow"
             Height="300"
             AcceptsReturn="True"
-            Text="{Binding Content}"
-        ></TextBox>
+            Text="{Binding Content}">
+        </TextBox>
         <Grid ColumnDefinitions="*,Auto,Auto">
-            <Button 
+            <Button
                 Height="25"
                 FontSize="10"
                 Margin="5"
                 Click="OkClick"
-                Grid.Column="1">
-                确认
-            </Button>
-            <Button 
+                Grid.Column="1"
+                Content="{markup:I18n {x:Static language:ChatEdit.OkButtonContent}}" />
+            <Button
                 Margin="5"
                 FontSize="10"
                 Click="CancelClick"
-                Height="25" Grid.Column="2">
-                取消
-            </Button>
+                Height="25" Grid.Column="2"
+                Content="{markup:I18n {x:Static language:ChatEdit.CancelButtonContent}}" />
         </Grid>
     </StackPanel>
-    
+
 </UserControl>

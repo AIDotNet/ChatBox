@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:markup="https://codewf.com"
+             xmlns:language="clr-namespace:Localization.Pages"
              xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:controls1="clr-namespace:ChatBox.Controls"
@@ -16,7 +18,7 @@
 
     <StackPanel Margin="20">
         <!-- Title -->
-        <TextBlock Text="翻译工具"
+        <TextBlock Text="{markup:I18n {x:Static language:Tool.TranslateLabel}}"
                    FontSize="32"
                    PointerPressed="OnPointerPressed"
                    HorizontalAlignment="Center"
@@ -24,7 +26,7 @@
 
         <!-- Original Text Input -->
         <TextBox Name="OriginalTextBox"
-                 Watermark="请输入原文..."
+                 Watermark="{markup:I18n {x:Static language:Tool.TranslateWatermark}}"
                  AcceptsReturn="True"
                  Text="{Binding OriginalText}"
                  TextWrapping="WrapWithOverflow"

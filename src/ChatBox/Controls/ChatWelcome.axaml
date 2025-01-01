@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:markup="https://codewf.com"
+             xmlns:language="clr-namespace:Localization.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ChatBox.Controls.ChatWelcome">
     <Grid>
@@ -10,8 +12,7 @@
             Margin="0,60,0,0"
             VerticalAlignment="Center"
             TextWrapping="Wrap"
-            HorizontalAlignment="Center">
-            嗨🖖，我是 AI Chat！欢迎使用AI Chat！
-        </TextBlock>
+            HorizontalAlignment="Center" 
+            Text="{markup:I18n {x:Static language:ChatWelcome.WelcomeContent}}"/>
     </Grid>
 </UserControl>

@@ -7,31 +7,40 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AIDotNet.AutoGpt" Version="1.0.10"/>
-        <PackageReference Include="Avalonia" Version="11.2.3"/>
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3"/>
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3"/>
+        <PackageReference Include="AIDotNet.AutoGpt" Version="1.0.10" />
+        <PackageReference Include="Avalonia" Version="11.2.3" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3"/>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageReference Include="Dapper" Version="2.1.35"/>
-        <PackageReference Include="Dapper.AOT" Version="1.0.31"/>
-        <PackageReference Include="FluentAvaloniaUI" Version="2.2.0"/>
-        <PackageReference Include="MarkdownAIRender" Version="0.1.13"/>
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.32.0"/>
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.32.0"/>
-        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.32.0"/>
-        <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.32.0-alpha"/>
-        <PackageReference Include="SharpToken" Version="2.0.3"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="Dapper" Version="2.1.35" />
+        <PackageReference Include="Dapper.AOT" Version="1.0.31" />
+        <PackageReference Include="FluentAvaloniaUI" Version="2.2.0" />
+        <PackageReference Include="MarkdownAIRender" Version="0.1.13" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.32.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.32.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.32.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.32.0-alpha" />
+        <PackageReference Include="SharpToken" Version="2.0.3" />
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="i18n\ChatBoxMarkdown.zh-CN.xml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="i18n\ChatBoxMarkdown.en-US.xml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="i18n\ChatBoxMarkdown.ja-JP.xml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="i18n\ChatBoxMarkdown.zh-Hant.xml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -53,24 +62,20 @@
     </ItemGroup>
 
     <ItemGroup>
-        <BundleResource Include="i18n\ChatBoxMarkdown.zh-Hant.xml"/>
-        <BundleResource Include="models.json"/>
+        <BundleResource Include="i18n\ChatBoxMarkdown.zh-Hant.xml" />
+        <BundleResource Include="models.json" />
     </ItemGroup>
 
     <Target Name="CopyToMonoBundle" AfterTargets="Build" Condition="'$(IsMac)' == 'true'">
-        <Message Text="发布到macOS平台，执行资源拷贝。" Importance="high"/>
-        <Message Text="$(MACOutputPath)" Importance="high"/>
-        <Copy
-                SourceFiles="@(BundleResource)"
-                DestinationFolder="$(MACOutputPath)/$(MACAPPName)/Contents/MonoBundle"/>
+        <Message Text="发布到macOS平台，执行资源拷贝。" Importance="high" />
+        <Message Text="$(MACOutputPath)" Importance="high" />
+        <Copy SourceFiles="@(BundleResource)" DestinationFolder="$(MACOutputPath)/$(MACAPPName)/Contents/MonoBundle" />
     </Target>
     
     <Target Name="CopyToMonoBundleAfterPublish" AfterTargets="Publish" Condition="'$(IsMac)' == 'true'">
-        <Message Text="发布到macOS平台，执行资源拷贝。" Importance="high"/>
-        <Message Text="$(PublishDir)" Importance="high"/>
-        <Copy
-                SourceFiles="@(BundleResource)"
-                DestinationFolder="$(PublishDir)/$(MACAPPName)/Contents/MonoBundle"/>
+        <Message Text="发布到macOS平台，执行资源拷贝。" Importance="high" />
+        <Message Text="$(PublishDir)" Importance="high" />
+        <Copy SourceFiles="@(BundleResource)" DestinationFolder="$(PublishDir)/$(MACAPPName)/Contents/MonoBundle" />
     </Target>
 
     <ItemGroup>
@@ -78,13 +83,22 @@
             <DependentUpon>ActionBar.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Compile Update="i18n\Language.cs">
+          <DesignTime>True</DesignTime>
+          <AutoGen>True</AutoGen>
+          <DependentUpon>Language.tt</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
-        <UpToDateCheckInput Remove="Controls\RenderMarkdown\RenderMarkdown.axaml"/>
+        <UpToDateCheckInput Remove="Controls\RenderMarkdown\RenderMarkdown.axaml" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ChatBox.Logger\ChatBox.Logger.csproj"/>
+        <ProjectReference Include="..\ChatBox.Logger\ChatBox.Logger.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
     </ItemGroup>
 </Project>

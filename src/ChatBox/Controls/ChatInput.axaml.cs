@@ -4,6 +4,7 @@ using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using AvaloniaXmlTranslator;
 using ChatBox.AI;
 using ChatBox.Models;
 using ChatBox.Service;
@@ -225,7 +226,7 @@ public partial class ChatInput : UserControl
         catch (Exception e)
         {
             _notificationManager?.Show(
-                new Notification("错误", e.Message, NotificationType.Error));
+                new Notification(I18nManager.Instance.GetResource(Localization.Controls.ChatInput.ErrorNotificationTitle), e.Message, NotificationType.Error));
         }
     }
 
@@ -257,7 +258,7 @@ public partial class ChatInput : UserControl
         var _target = HostApplication.Services.GetService<MainWindow>();
         var files = await _target.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
-            Title = "请选择文件",
+            Title = I18nManager.Instance.GetResource(Localization.Controls.ChatInput.ChoiceFileTitle),
             AllowMultiple = true,
             FileTypeFilter = new[] { CodeAll, FilePickerFileTypes.TextPlain }
         });

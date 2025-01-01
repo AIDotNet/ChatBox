@@ -3,6 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
+             xmlns:markup="https://codewf.com"
+             xmlns:language="clr-namespace:Localization.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ChatBox.Pages.Setting"
              x:DataType="viewModels:SettingViewModel">
@@ -18,9 +20,8 @@
                 FontSize="24"
                 Margin="0,60,0,0"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-                AI Chat 设置
-            </TextBlock>
+                VerticalAlignment="Center"
+                Text="{markup:I18n {x:Static language:Setting.Title}}"/>
 
         </Grid>
 
@@ -30,19 +31,30 @@
               RowDefinitions="Auto,Auto,Auto,Auto,Auto">
             <TextBlock
                 Width="130"
-                Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10" >
-                <Run Text="最大Token:"></Run>
+                Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10">
+                <Run Text="{markup:I18n {x:Static language:Setting.MaxTokenLabel}}"></Run>
                 <Run Text="{Binding Setting.MaxToken}"></Run>
             </TextBlock>
-            
+
             <Slider
                 Minimum="500"
                 Maximum="128000"
                 Value="{Binding Setting.MaxToken}"
-                Name="MaxTokenTextBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" 
-            />
-            
-            <Button Content="保存"
+                Name="MaxTokenTextBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" />
+
+            <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap"
+                       Text="{markup:I18n {x:Static language:Setting.LanguageKey}}" />
+            <ComboBox
+                Grid.Row="3"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                PlaceholderText="{markup:I18n {x:Static language:Setting.LanguagePlaceholderText}}"
+                DisplayMemberBinding="{Binding Description}"
+                ItemsSource="{Binding Languages}"
+                SelectedItem="{Binding SelectedLanguage}" />
+
+            <Button Content="{markup:I18n {x:Static language:Setting.SaveButtonContent}}"
                     Width="260"
                     Grid.Row="4" Grid.Column="1"
                     Click="SaveSetting" />

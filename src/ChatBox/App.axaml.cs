@@ -4,6 +4,8 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Platform;
+using AvaloniaXmlTranslator;
+using AvaloniaXmlTranslator.Markup;
 using ChatBox.Views;
 
 namespace ChatBox;
@@ -60,16 +62,12 @@ public partial class App : Application
     {
         var menu = new NativeMenu();
 
-        var exit = new NativeMenuItem
-        {
-            Header = "退出程序"
-        };
+        var exit = new NativeMenuItem();
+        exit.Bind(NativeMenuItem.HeaderProperty, new I18nBinding(Localization.App.MenuItemExitHeader));
         exit.Click += (sender, args) => { Environment.Exit(0); };
 
-        var chat = new NativeMenuItem
-        {
-            Header = "显示主界面"
-        };
+        var chat = new NativeMenuItem();
+        chat.Bind(NativeMenuItem.HeaderProperty, new I18nBinding(Localization.App.MenuItemOpenMainWindowHeader));
 
         chat.Click += (sender, args) =>
         {
