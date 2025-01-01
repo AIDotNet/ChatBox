@@ -34,6 +34,7 @@
 		</ChatRender>
 		<ChatWelcome>
 			<WelcomeContent>Hi 🖖, I'm AI Chat! Welcome to use AI Chat!</WelcomeContent>
+			<WelcomeUseMessage>Please enter your questions in the input box, and I will try my best to answer your questions!</WelcomeUseMessage>
 		</ChatWelcome>
 		<WorkspaceConversation>
 			<CopyNotificationTitle>Copy succeeded</CopyNotificationTitle>
@@ -41,6 +42,8 @@
 			<ErrorNotificationTitle>Error</ErrorNotificationTitle>
 		</WorkspaceConversation>
 		<WorkspaceHeader>
+			<FitToWindowRight>Fit to the right side of the window</FitToWindowRight>
+			<RestoreWindow>Restore the window</RestoreWindow>
 			<HideButtonTip>Hide the current window</HideButtonTip>
 		</WorkspaceHeader>
 	</Controls>
@@ -53,6 +56,7 @@
 			<SaveButtonContent>Save</SaveButtonContent>
 			<SaveSuccessNotificationTitle>Save successfully</SaveSuccessNotificationTitle>
 			<SaveSuccessNotificationMessage>Settings saved successfully</SaveSuccessNotificationMessage>
+			<Logout>Log out</Logout>
 		</Setting>
 		<Tool>
 			<TranslateLabel>Translation tool</TranslateLabel>

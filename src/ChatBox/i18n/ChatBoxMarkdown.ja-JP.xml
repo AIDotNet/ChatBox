@@ -34,6 +34,7 @@
 		</ChatRender>
 		<ChatWelcome>
 			<WelcomeContent>やあ🖖、私はAI Chatです！AI Chatをご利用いただき、ありがとうございます。</WelcomeContent>
+			<WelcomeUseMessage>入力欄にご質問を入力してください。私はできる限りご質問にお答えします！</WelcomeUseMessage>
 		</ChatWelcome>
 		<WorkspaceConversation>
 			<CopyNotificationTitle>コピー成功</CopyNotificationTitle>
@@ -41,6 +42,8 @@
 			<ErrorNotificationTitle>エラー</ErrorNotificationTitle>
 		</WorkspaceConversation>
 		<WorkspaceHeader>
+			<FitToWindowRight>ウィンドウの右側に合わせる</FitToWindowRight>
+			<RestoreWindow>ウィンドウを復元する</RestoreWindow>
 			<HideButtonTip>現在のウィンドウを隠す</HideButtonTip>
 		</WorkspaceHeader>
 	</Controls>
@@ -53,6 +56,7 @@
 			<SaveButtonContent>保存</SaveButtonContent>
 			<SaveSuccessNotificationTitle>保存に成功しました</SaveSuccessNotificationTitle>
 			<SaveSuccessNotificationMessage>設定の保存に成功しました</SaveSuccessNotificationMessage>
+			<Logout>ログアウト</Logout>
 		</Setting>
 		<Tool>
 			<TranslateLabel>翻訳ツール</TranslateLabel>

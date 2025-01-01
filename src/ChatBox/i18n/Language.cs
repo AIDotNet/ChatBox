@@ -56,6 +56,7 @@ namespace Localization.Controls
     public static class ChatWelcome
     {
         public static readonly string WelcomeContent = "Localization.Controls.ChatWelcome.WelcomeContent";
+        public static readonly string WelcomeUseMessage = "Localization.Controls.ChatWelcome.WelcomeUseMessage";
     }
 }
 namespace Localization.Controls
@@ -71,6 +72,8 @@ namespace Localization.Controls
 {
     public static class WorkspaceHeader
     {
+        public static readonly string FitToWindowRight = "Localization.Controls.WorkspaceHeader.FitToWindowRight";
+        public static readonly string RestoreWindow = "Localization.Controls.WorkspaceHeader.RestoreWindow";
         public static readonly string HideButtonTip = "Localization.Controls.WorkspaceHeader.HideButtonTip";
     }
 }
@@ -85,6 +88,7 @@ namespace Localization.Pages
         public static readonly string SaveButtonContent = "Localization.Pages.Setting.SaveButtonContent";
         public static readonly string SaveSuccessNotificationTitle = "Localization.Pages.Setting.SaveSuccessNotificationTitle";
         public static readonly string SaveSuccessNotificationMessage = "Localization.Pages.Setting.SaveSuccessNotificationMessage";
+        public static readonly string Logout = "Localization.Pages.Setting.Logout";
     }
 }
 namespace Localization.Pages

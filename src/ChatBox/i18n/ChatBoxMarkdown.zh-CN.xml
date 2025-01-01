@@ -34,6 +34,7 @@
 		</ChatRender>
 		<ChatWelcome>
 			<WelcomeContent>嗨🖖，我是 AI Chat！欢迎使用AI Chat！</WelcomeContent>
+			<WelcomeUseMessage>请在输入框输入您的问题，我会尽力回答您的问题！</WelcomeUseMessage>
 		</ChatWelcome>
 		<WorkspaceConversation>
 			<CopyNotificationTitle>复制成功</CopyNotificationTitle>
@@ -41,6 +42,8 @@
 			<ErrorNotificationTitle>错误</ErrorNotificationTitle>
 		</WorkspaceConversation>
 		<WorkspaceHeader>
+			<FitToWindowRight>贴合窗口右侧</FitToWindowRight>
+			<RestoreWindow>恢复窗口</RestoreWindow>
 			<HideButtonTip>隐藏当前窗口</HideButtonTip>
 		</WorkspaceHeader>
 	</Controls>
@@ -53,6 +56,7 @@
 			<SaveButtonContent>保存</SaveButtonContent>
 			<SaveSuccessNotificationTitle>保存成功</SaveSuccessNotificationTitle>
 			<SaveSuccessNotificationMessage>设置保存成功</SaveSuccessNotificationMessage>
+			<Logout>退出登录</Logout>
 		</Setting>
 		<Tool>
 			<TranslateLabel>翻译工具</TranslateLabel>

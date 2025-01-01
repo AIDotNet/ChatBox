@@ -10,6 +10,16 @@ public class IOSSettingService : ISettingService
     private readonly string _settingConfig = ConstantPath.ChatSettingPath;
     private Action? _settingCallback;
 
+    public string GetCulture()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetCulture(string culture)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// 监听_settingConfig文件的变化
     /// </summary>
