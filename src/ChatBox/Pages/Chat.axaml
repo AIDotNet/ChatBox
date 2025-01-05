@@ -4,16 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:controls="clr-namespace:ChatBox.Controls"
              xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
+             xmlns:chatSession="clr-namespace:ChatBox.Controls.ChatSession"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ChatBox.Pages.Chat">
-    
-    
+
+
     <Design.DataContext>
         <viewModels:ChatViewModel />
     </Design.DataContext>
 
-    
-    <Grid ColumnDefinitions="*">
-        <controls:Workspace Grid.Column="0"></controls:Workspace>
+
+    <Grid ColumnDefinitions="240,*">
+        <chatSession:ChatSession />
+        <controls:Workspace Grid.Column="1"></controls:Workspace>
     </Grid>
 </UserControl>

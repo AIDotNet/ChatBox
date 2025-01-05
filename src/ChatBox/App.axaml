@@ -13,6 +13,7 @@
             <convertors:WorkspaceEditConvertor x:Key="WorkspaceEditConvertor" />
             <convertors:ModelIconConvertor x:Key="ModelIconConvertor"></convertors:ModelIconConvertor>
             <convertors:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+            <convertors:IsSelectedConverter x:Key="IsSelectedConverter" />
         </ResourceDictionary>
     </Application.Resources>
     
@@ -22,6 +23,7 @@
         <sty:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
         <StyleInclude Source="avares://ChatBox/Styling/ControlsGalleryStyles.axaml" />
         <StyleInclude Source="avares://MarkdownAIRender/Index.axaml" />
+        <StyleInclude Source="avares://ChatBox/Icons.axaml" />
 
 		<Style Selector="SelectableTextBlock">
 			<Setter Property="FontSize" Value="12" />

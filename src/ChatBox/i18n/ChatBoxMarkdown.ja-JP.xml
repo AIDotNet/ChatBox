@@ -6,6 +6,11 @@
 		<MenuItemOpenMainWindowHeader>メイン画面を表示する</MenuItemOpenMainWindowHeader>
 	</App>
 	<Controls>
+		<ChatSession>
+			<ChatRenameSession>セッションをリネームする</ChatRenameSession>
+			<ChatDeleteSession>セッションを削除する</ChatDeleteSession>
+			<ChatEditSession>セッションを編集する</ChatEditSession>
+		</ChatSession>
 		<ChatEdit>
 			<Title>メッセージを編集する</Title>
 			<OkButtonContent>確認</OkButtonContent>
@@ -15,6 +20,7 @@
 			<Submit>提出する</Submit>
 			<ErrorNotificationTitle>エラー</ErrorNotificationTitle>
 			<ChoiceFileTitle>ファイルを選択してください</ChoiceFileTitle>
+			<NewSessionTitle>新しい会話を作ることです</NewSessionTitle>
 		</ChatInput>
 		<ChatRender>
 			<ExecutePluginLabel>プラグインを実行：</ExecutePluginLabel>

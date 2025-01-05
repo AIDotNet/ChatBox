@@ -6,6 +6,11 @@
 		<MenuItemOpenMainWindowHeader>Display the main interface</MenuItemOpenMainWindowHeader>
 	</App>
 	<Controls>
+		<ChatSession>
+			<ChatRenameSession>Intelligent Rename</ChatRenameSession>
+			<ChatDeleteSession>Delete Session</ChatDeleteSession>
+			<ChatEditSession>Edit Session</ChatEditSession>
+		</ChatSession>
 		<ChatEdit>
 			<Title>Edit Message</Title>
 			<OkButtonContent>Confirm</OkButtonContent>
@@ -15,6 +20,7 @@
 			<Submit>Submit</Submit>
 			<ErrorNotificationTitle>Error</ErrorNotificationTitle>
 			<ChoiceFileTitle>Please choose a file</ChoiceFileTitle>
+			<NewSessionTitle>New Session</NewSessionTitle>
 		</ChatInput>
 		<ChatRender>
 			<ExecutePluginLabel>Execute Plugin:</ExecutePluginLabel>

@@ -17,7 +17,7 @@
     <StackPanel 
         Background="Transparent"
         PointerPressed="OnPointerPressed">
-        <Grid ColumnDefinitions="Auto,*">
+        <Grid ColumnDefinitions="Auto,Auto,*">
             <Button
                 BorderThickness="0"
                 Margin="5,0,0,0"
@@ -37,13 +37,21 @@
                 </StackPanel>
             </Button>
             <Grid
-                Grid.Column="1" Margin="8"
+                Grid.Column="2" Margin="8"
                 ColumnDefinitions="*,Auto"
                 Height="35">
                 <TextBlock
                     VerticalAlignment="Center"
+                    Text="{Binding Session.Name}"
                     HorizontalAlignment="Center">
-                    AI Chat
+                    <!-- 优化这个主题的样式 -->
+                    <TextBlock.Styles>
+                        <Style Selector="TextBlock">
+                            <Setter Property="FontSize" Value="16" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                            
+                        </Style>
+                    </TextBlock.Styles>
                 </TextBlock>
             </Grid>
         </Grid>

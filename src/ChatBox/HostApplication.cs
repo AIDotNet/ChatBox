@@ -131,6 +131,8 @@ public class HostApplication
                 services.AddSingleton<ModelProviderService>();
 
                 services.AddSingleton<ChatMessageRepository>();
+                services.AddSingleton<SessionRepository>();
+                
             }).ConfigureLogging(logging =>
             {
                 logging.ClearProviders();

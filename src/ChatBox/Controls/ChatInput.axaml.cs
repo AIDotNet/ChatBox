@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls.Notifications;
 using Avalonia.Input;
@@ -8,8 +9,6 @@ using Avalonia.Threading;
 using AvaloniaXmlTranslator;
 using ChatBox.AI;
 using ChatBox.Models;
-using ChatBox.Service;
-using ChatBox.Views;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
@@ -20,11 +19,12 @@ public partial class ChatInput : UserControl
     private readonly ChatCompleteService chatCompleteService;
     private readonly ChatMessageRepository chatMessageRepository;
     private WindowNotificationManager? _notificationManager;
+    private readonly SessionRepository sessionRepository;
 
     public static FilePickerFileType CodeAll { get; } = new("All Code Files")
     {
-        Patterns = new[]
-        {
+        Patterns =
+        [
             "*.cs", "*.java", "*.js", "*.rs", "*.py", "*.md", "*.ts", "*.tsx",
             "*.cpp", "*.h", "*.hpp", "*.c", "*.h", "*.html", "*.css", "*.xml",
             "*.json", "*.php", "*.rb", "*.go", "*.swift", "*.kt", "*.scala",
@@ -40,15 +40,17 @@ public partial class ChatInput : UserControl
             "*.xslmcxvi", "*.xslmcxvi", "*.xslmcxvi", "*.xslmcxvi", "*.xslmcxvi",
             "*.xslmcxvi", "*.xslmcxvi", "*.xslmcxvi", "*.xslmcxvi", "*.xslmcxvi",
             "*.axaml"
-        }
+        ]
     };
 
     public ChatInput()
     {
         InitializeComponent();
 
+
         chatCompleteService = HostApplication.Services.GetService<ChatCompleteService>();
         chatMessageRepository = HostApplication.Services.GetService<ChatMessageRepository>();
+        sessionRepository = HostApplication.Services.GetService<SessionRepository>();
     }
 
     private ChatViewModel ViewModel => (ChatViewModel)DataContext;
@@ -57,6 +59,14 @@ public partial class ChatInput : UserControl
     {
         base.OnAttachedToVisualTree(e);
         _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
+    }
+
+    protected override async void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+
+
+        await InitSession().ConfigureAwait(false);
     }
 
 
@@ -84,7 +94,7 @@ public partial class ChatInput : UserControl
                 Role = AuthorRole.User.ToString(),
                 CreatedAt = DateTime.Now,
                 Id = Guid.NewGuid().ToString(),
-                SessionId = ViewModel.SessionId
+                SessionId = ViewModel.Session.Id
             };
             user.Meta.Add("avatar", "https://avatars.githubusercontent.com/u/10251060?v=4");
             user.Meta.Add("name", "User");
@@ -111,9 +121,9 @@ public partial class ChatInput : UserControl
             var bot = new ChatMessage
             {
                 Role = AuthorRole.Assistant.ToString(),
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.Now.AddSeconds(5),
                 Id = Guid.NewGuid().ToString(),
-                SessionId = ViewModel.SessionId
+                SessionId = ViewModel.Session.Id
             };
             bot.Meta.Add("avatar", "https://avatars.githubusercontent.com/u/10251060?v=4");
             bot.Meta.Add("name", "Assistant");
@@ -142,80 +152,86 @@ public partial class ChatInput : UserControl
             _ = Task.Run(async () =>
             {
                 int token = 0;
-                await foreach (var item in chatCompleteService.GetChatComplete(newMessage, model,
-                                   autoCallTool, files, isInference))
+                try
                 {
-                    if (isfirst)
+                    await foreach (var item in chatCompleteService.GetChatComplete(newMessage, model,
+                                       autoCallTool, files, isInference))
                     {
-                        Dispatcher.UIThread.Invoke(() =>
+                        if (isfirst)
                         {
-                            bot.Content = string.Empty;
-                            botView.Content = string.Empty;
-                        });
-                    }
+                            Dispatcher.UIThread.Invoke(() =>
+                            {
+                                bot.Content = string.Empty;
+                                botView.Content = string.Empty;
+                            });
+                        }
 
-                    foreach (var x in item.Items)
-                    {
-                        if (x is StreamingFunctionCallUpdateContent callUpdateContent)
+                        foreach (var x in item.Items)
                         {
-                            var plugin = chatCompleteService.GetPlugin(model, callUpdateContent.Name);
-                            if (plugin != null)
+                            if (x is StreamingFunctionCallUpdateContent callUpdateContent)
                             {
-                                bot.Plugin = plugin;
-                                bot.Plugin.Arguments = callUpdateContent.Arguments ?? string.Empty;
-                                Dispatcher.UIThread.Invoke(() =>
+                                var plugin = chatCompleteService.GetPlugin(model, callUpdateContent.Name);
+                                if (plugin != null)
                                 {
-                                    botView.Plugin = new()
+                                    bot.Plugin = plugin;
+                                    bot.Plugin.Arguments = callUpdateContent.Arguments ?? string.Empty;
+                                    Dispatcher.UIThread.Invoke(() =>
                                     {
-                                        Name = bot.Plugin.Name,
-                                        Description = bot.Plugin.Description,
-                                        Arguments = bot.Plugin.Arguments
-                                    };
-                                });
-                            }
-                            else if (plugin == null && bot.Plugin != null)
-                            {
-                                bot.Plugin.Arguments += callUpdateContent.Arguments ?? string.Empty;
+                                        botView.Plugin = new()
+                                        {
+                                            Name = bot.Plugin.Name,
+                                            Description = bot.Plugin.Description,
+                                            Arguments = bot.Plugin.Arguments
+                                        };
+                                    });
+                                }
+                                else if (plugin == null && bot.Plugin != null)
+                                {
+                                    bot.Plugin.Arguments += callUpdateContent.Arguments ?? string.Empty;
 
-                                Dispatcher.UIThread.Invoke(() =>
-                                {
-                                    botView.Plugin = new()
+                                    Dispatcher.UIThread.Invoke(() =>
                                     {
-                                        Name = bot.Plugin.Name,
-                                        Description = bot.Plugin.Description,
-                                        Arguments = bot.Plugin.Arguments
-                                    };
-                                });
+                                        botView.Plugin = new()
+                                        {
+                                            Name = bot.Plugin.Name,
+                                            Description = bot.Plugin.Description,
+                                            Arguments = bot.Plugin.Arguments
+                                        };
+                                    });
+                                }
                             }
                         }
-                    }
 
-                    bot.Content += item.Content;
+                        bot.Content += item.Content;
 
-                    token++;
-                    if (token == 5 || isfirst)
-                    {
-                        await Dispatcher.UIThread.InvokeAsync(() => { botView.Content = bot.Content; });
-                        isfirst = false;
-                    }
-                    else if (token == 10)
-                    {
-                        token = 0;
-                        Dispatcher.UIThread.Invoke(() =>
+                        token++;
+                        if (token == 5 || isfirst)
                         {
-                            botView.Content = bot.Content;
+                            await Dispatcher.UIThread.InvokeAsync(() => { botView.Content = bot.Content; });
+                            isfirst = false;
+                        }
+                        else if (token == 10)
+                        {
+                            token = 0;
+                            Dispatcher.UIThread.Invoke(() =>
+                            {
+                                botView.Content = bot.Content;
 
-                            ViewModel.OnMessageUpdated?.Invoke();
-                        });
+                                ViewModel.OnMessageUpdated?.Invoke();
+                            });
+                        }
                     }
                 }
-
-                Dispatcher.UIThread.Invoke(() =>
+                finally
                 {
-                    botView.Content = bot.Content;
-                    ViewModel.OnMessageUpdated?.Invoke();
-                    ViewModel.IsGenerating = false;
-                });
+                    Dispatcher.UIThread.Invoke(() =>
+                    {
+                        botView.Content = bot.Content;
+                        ViewModel.OnMessageUpdated?.Invoke();
+                        ViewModel.IsGenerating = false;
+                    });
+                }
+
                 await chatMessageRepository.InsertAsync(bot);
             });
         }
@@ -284,11 +300,63 @@ public partial class ChatInput : UserControl
         }
     }
 
-    private void TextBox_KeyUp(object? sender, KeyEventArgs e)
+    private async void NewSessionButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (e is { Key: Key.Enter, KeyModifiers: KeyModifiers.None })
+        var session = new Session()
         {
-            Submit(sender, e);
+            Id = Guid.NewGuid().ToString(),
+            Name = I18nManager.Instance.GetResource(Localization.Controls.ChatInput.NewSessionTitle),
+            Description = "New Session",
+            System = "",
+            Model = ViewModel.CurrentModel.Key,
+            MaxHistory = -1,
+            TopicModel = "gpt-4o-mini",
+            Avatar = "https://avatars.githubusercontent.com/u/10251060?v=4",
+        };
+
+        ViewModel.Sessions.Add(session);
+        
+        ViewModel.Session = session;
+
+        // 情况会话
+        ViewModel.Messages.Clear();
+        ViewModel.Files.Clear();
+        
+
+        await sessionRepository.InsertAsync(session);
+    }
+
+    /// <summary>
+    /// 初始化Session
+    /// </summary>
+    /// <returns></returns>
+    private async Task InitSession()
+    {
+        var sessions = (await sessionRepository.GetSessionsAsync()).OrderByDescending(x => x.CreatedAt);
+        var session = sessions
+            .FirstOrDefault();
+        if (session == null)
+        {
+            session = new Session()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = I18nManager.Instance.GetResource(Localization.Controls.ChatInput.NewSessionTitle),
+                Description = "New Session",
+                System = "",
+                Model = ViewModel.ModelId?.Id ?? "gpt-4o-mini",
+                MaxHistory = -1,
+                TopicModel = "gpt-4o-mini",
+                Avatar = "https://avatars.githubusercontent.com/u/10251060?v=4",
+            };
+
+            await sessionRepository.InsertAsync(session);
+            
+            ViewModel.Sessions.Add(session);
         }
+        else
+        {
+            ViewModel.Sessions = new ObservableCollection<Session>(sessions);
+        }
+        ViewModel.Session = session;
     }
 }

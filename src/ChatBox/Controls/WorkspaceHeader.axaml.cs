@@ -51,26 +51,22 @@ public partial class WorkspaceHeader : UserControl
             // Restore the window to its previous size and position
             window.Position = _previousPosition;
             window.Width = _previousWidth;
-            
+
             window.Topmost = false;
             window.Activate();
             window.WindowState = WindowState.Minimized;
             ViewModel.IsRight = false;
-            
+
             var screen = window.Screens.ScreenFromVisual(window);
             if (screen != null)
             {
                 window.Height = _previousHeight;
             }
-            
+
             Task.Delay(10).ContinueWith(_ =>
             {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    window.WindowState = WindowState.Normal;
-                });
+                Dispatcher.UIThread.Post(() => { window.WindowState = WindowState.Normal; });
             });
-            
         }
         else
         {
@@ -93,7 +89,7 @@ public partial class WorkspaceHeader : UserControl
                     window.Width = (double)((decimal)screen.Bounds.Width / 5); // 1/3 of the screen width
                 }
 
-                window.Height = screen.Bounds.Height; // Full screen height
+                window.Height = screen.Bounds.Height - 48; // Full screen height
                 // Grid失效
 
                 window.Position = new PixelPoint((int)(screen.Bounds.Width - window.Width), 0); // Right side

@@ -18,6 +18,7 @@
 
     <Grid RowDefinitions="38,*,Auto,52">
         <controls1:ActionBar
+            NewSessionClick="NewSessionButton_Click"
             DeleteClick="DeleteButton_Click" />
         <TextBox Watermark="Ask me anything, I'm here to help!"
                  AcceptsTab="True"
@@ -65,7 +66,6 @@
                     </controls:SymbolIcon>
                 </Button>
                 <Grid ColumnDefinitions="*,Auto,Auto"
-                      
                       Grid.Column="1">
                     <ComboBox
                         VerticalAlignment="Center"

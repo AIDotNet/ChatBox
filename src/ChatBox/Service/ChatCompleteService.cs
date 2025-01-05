@@ -41,6 +41,36 @@ public class ChatCompleteService(ISettingService settingService, TokenService to
     }
 
     /// <summary>
+    /// 智能重命名
+    /// </summary>
+    /// <returns></returns>
+    public async Task<string> RenameAsync(string content, string modelId)
+    {
+        var setting = settingService.LoadSetting();
+        var kernel = KernelFactory.GetKernel(setting.ApiKey, modelId, setting.Type);
+
+        var chatComplete = kernel.GetRequiredService<IChatCompletionService>();
+
+        var chatHistory = new ChatHistory();
+        
+        chatHistory.AddSystemMessage(
+"""
+你是一名擅长会话的助理，你需要将用户的会话总结为 10 个字以内的标题            
+""");
+        
+        chatHistory.AddUserMessage(content);
+        
+        var items = await chatComplete.GetChatMessageContentAsync(chatHistory,
+            new OpenAIPromptExecutionSettings()
+            {
+                MaxTokens = setting.MaxToken,
+                ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+            }, kernel);
+        
+        return items.Content;
+    }
+
+    /// <summary>
     /// 翻译内容
     /// </summary>
     /// <returns></returns>

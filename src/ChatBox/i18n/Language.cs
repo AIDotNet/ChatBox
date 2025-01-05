@@ -13,6 +13,19 @@ namespace Localization
         public static readonly string MenuItemOpenMainWindowHeader = "Localization.App.MenuItemOpenMainWindowHeader";
     }
 }
+
+namespace Localization.Controls
+{
+    public static class ChatSession
+    {
+        public static readonly string ChatDeleteSession = "Localization.Controls.ChatSession.ChatDeleteSession";
+        
+        public static readonly string ChatEditSession = "Localization.Controls.ChatSession.ChatEditSession";
+        
+        public static readonly string ChatRenameSession = "Localization.Controls.ChatSession.ChatRenameSession";
+    }
+}
+
 namespace Localization.Controls
 {
     public static class ChatEdit
@@ -29,6 +42,7 @@ namespace Localization.Controls
         public static readonly string Submit = "Localization.Controls.ChatInput.Submit";
         public static readonly string ErrorNotificationTitle = "Localization.Controls.ChatInput.ErrorNotificationTitle";
         public static readonly string ChoiceFileTitle = "Localization.Controls.ChatInput.ChoiceFileTitle";
+        public static readonly string NewSessionTitle = "Localization.Controls.ChatInput.NewSessionTitle";
     }
 }
 namespace Localization.Controls

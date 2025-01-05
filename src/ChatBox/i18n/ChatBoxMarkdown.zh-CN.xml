@@ -6,6 +6,11 @@
 		<MenuItemOpenMainWindowHeader>显示主界面</MenuItemOpenMainWindowHeader>
 	</App>
 	<Controls>
+		<ChatSession>
+			<ChatRenameSession>智能重命名</ChatRenameSession>
+			<ChatDeleteSession>删除会话</ChatDeleteSession>
+			<ChatEditSession>编辑会话</ChatEditSession>
+		</ChatSession>
 		<ChatEdit>
 			<Title>编辑消息</Title>
 			<OkButtonContent>确认</OkButtonContent>
@@ -15,6 +20,7 @@
 			<Submit>提交</Submit>
 			<ErrorNotificationTitle>错误</ErrorNotificationTitle>
 			<ChoiceFileTitle>请选择文件</ChoiceFileTitle>
+			<NewSessionTitle>新建会话</NewSessionTitle>
 		</ChatInput>
 		<ChatRender>
 			<ExecutePluginLabel>执行插件：</ExecutePluginLabel>

@@ -151,6 +151,79 @@ public class DbContext : IDisposable
         return await command.ExecuteNonQueryAsync();
     }
 
+    public async Task<IEnumerable<T>> QueryAsync<T>(string sql)
+    {
+        var type = typeof(T);
+
+        var properties = type.GetProperties().Where(p => p.CanWrite);
+
+        await using var command = _connection.CreateCommand();
+        command.CommandText = sql;
+        var result = new List<T>();
+        await using var reader = await command.ExecuteReaderAsync();
+
+
+        while (await reader.ReadAsync())
+        {
+            var ctor = typeof(T).GetConstructors().FirstOrDefault();
+            if (ctor == null)
+            {
+                throw new InvalidOperationException($"{typeof(T).Name} 未找到构造函数！");
+            }
+
+            var parameters = ctor.GetParameters().Select(p =>
+            {
+                var dbValue = reader[p.Name];
+                return dbValue == DBNull.Value ? null : Convert.ChangeType(dbValue, p.ParameterType);
+            }).ToArray();
+
+            var entity = (T)ctor.Invoke(parameters);
+
+            // 填充属性
+            // 填充属性
+            foreach (var property in properties)
+            {
+                if (property.PropertyType.IsGenericType &&
+                    property.PropertyType.GetGenericTypeDefinition() == typeof(ObservableGroupedCollection<,>))
+                {
+                    property.SetValue(entity,
+                        JsonSerializer.Deserialize(reader[property.Name].ToString(), property.PropertyType,
+                            AppJsonSerialize.SerializerOptions));
+                    continue;
+                }
+
+                if (property.PropertyType.IsClass && property.PropertyType != typeof(string) &&
+                    property.PropertyType != typeof(DateTime) && property.PropertyType != typeof(DateTime?))
+                {
+                    property.SetValue(entity,
+                        JsonSerializer.Deserialize(reader[property.Name].ToString(), property.PropertyType,
+                            AppJsonSerialize.SerializerOptions));
+                    continue;
+                }
+
+                if (property.PropertyType == typeof(DateTime))
+                {
+                    property.SetValue(entity, DateTime.Parse(reader[property.Name].ToString()));
+                    continue;
+                }
+
+                if (property.PropertyType == typeof(DateTime?))
+                {
+                    property.SetValue(entity, string.IsNullOrEmpty(reader[property.Name].ToString())
+                        ? null
+                        : DateTime.Parse(reader[property.Name].ToString()));
+                    continue;
+                }
+
+                property.SetValue(entity, reader[property.Name]);
+            }
+
+            result.Add(entity);
+        }
+
+        return result;
+    }
+
     public async Task<IEnumerable<T>> QueryAsync<T>(Expression<Func<T, bool>> predicate)
     {
         var type = typeof(T);
@@ -214,7 +287,13 @@ public class DbContext : IDisposable
                         : DateTime.Parse(reader[property.Name].ToString()));
                     continue;
                 }
-
+                
+                if (property.PropertyType == typeof(long))
+                {
+                    property.SetValue(entity, long.Parse(reader[property.Name].ToString()));
+                    continue;
+                }
+                
                 property.SetValue(entity, reader[property.Name]);
             }
 
@@ -233,6 +312,10 @@ public class DbContext : IDisposable
             CREATE TABLE IF NOT EXISTS {nameof(ChatMessage)} (
                 {GetColumns<ChatMessage>()}
             );
+
+            CREATE TABLE IF NOT EXISTS {nameof(Session)} (
+                {GetColumns<Session>()}
+            )    
         ";
         command.ExecuteNonQuery();
 

@@ -1,0 +1,84 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:ChatBox.Models"
+             xmlns:MarkdownAIRender="https://github.com/AIDotNet/Markdown.AIRender"
+             xmlns:lucideAvalonia="clr-namespace:LucideAvalonia;assembly=LucideAvalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:markup="https://codewf.com"
+             xmlns:language="clr-namespace:Localization.Controls"
+             x:Class="ChatBox.Controls.ChatSession.ChatSessionItem"
+             x:DataType="models:Session">
+
+    <Design.DataContext>
+        <models:Session />
+    </Design.DataContext>
+
+    <Border
+        Name="Border" Classes="session">
+        <Grid
+            ColumnDefinitions="Auto,*,Auto">
+            <Border Width="50"
+                    Height="50"
+                    Tapped="Border_OnTapped"
+                    Margin="0,0,5,5"
+                    CornerRadius="50"
+                    ClipToBounds="True">
+                <MarkdownAIRender:ImagesRender Value="{Binding Avatar}" />
+            </Border>
+            <StackPanel
+                Tapped="Border_OnTapped"
+                Grid.Column="1">
+                <TextBlock
+                    FontSize="16"
+                    Text="{Binding Name}">
+                </TextBlock>
+                <TextBlock
+                    FontSize="12"
+                    Text="{Binding Description}"
+                    TextWrapping="Wrap"
+                    MaxWidth="200">
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Button
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Height="25"
+                    Width="25"
+                    Padding="3"
+                    Margin="5,15,5,5">
+                    <lucideAvalonia:Lucide Icon="Ellipsis"
+                                           Height="14"
+                                           Width="14"
+                                           StrokeBrush="White"
+                                           StrokeThickness="1" />
+
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuItem 
+                                Click="RenameSession_Click"
+                                Header="{markup:I18n {x:Static language:ChatSession.ChatRenameSession}}" />
+                            <MenuItem Header="{markup:I18n {x:Static language:ChatSession.ChatEditSession}}" />
+                            <MenuItem Header="{markup:I18n {x:Static language:ChatSession.ChatDeleteSession}}" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Border.Styles>
+            <Style Selector="Border.session">
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+            <Style Selector="Border.session:pointerover">
+                <Setter Property="Background" Value="#393939" />
+            </Style>
+            <Style Selector="Border.isSelected">
+                <Setter Property="Background" Value="#393939" />
+            </Style>
+        </Border.Styles>
+    </Border>
+</UserControl>
