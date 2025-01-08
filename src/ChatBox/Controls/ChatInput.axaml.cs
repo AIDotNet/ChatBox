@@ -61,12 +61,11 @@ public partial class ChatInput : UserControl
         _notificationManager = HostApplication.Services.GetService<WindowNotificationManager>();
     }
 
-    protected override async void OnDataContextChanged(EventArgs e)
+    protected override void OnDataContextChanged(EventArgs e)
     {
         base.OnDataContextChanged(e);
 
-
-        await InitSession().ConfigureAwait(false);
+        InitSession();
     }
 
 
@@ -159,11 +158,11 @@ public partial class ChatInput : UserControl
                     {
                         if (isfirst)
                         {
-                            Dispatcher.UIThread.Invoke(() =>
+                            Dispatcher.UIThread.Post(() =>
                             {
                                 bot.Content = string.Empty;
                                 botView.Content = string.Empty;
-                            });
+                            }, DispatcherPriority.Background);
                         }
 
                         foreach (var x in item.Items)
@@ -189,7 +188,7 @@ public partial class ChatInput : UserControl
                                 {
                                     bot.Plugin.Arguments += callUpdateContent.Arguments ?? string.Empty;
 
-                                    Dispatcher.UIThread.Invoke(() =>
+                                    Dispatcher.UIThread.Post(() =>
                                     {
                                         botView.Plugin = new()
                                         {
@@ -197,7 +196,7 @@ public partial class ChatInput : UserControl
                                             Description = bot.Plugin.Description,
                                             Arguments = bot.Plugin.Arguments
                                         };
-                                    });
+                                    }, DispatcherPriority.Background);
                                 }
                             }
                         }
@@ -207,29 +206,30 @@ public partial class ChatInput : UserControl
                         token++;
                         if (token == 5 || isfirst)
                         {
-                            await Dispatcher.UIThread.InvokeAsync(() => { botView.Content = bot.Content; });
+                            Dispatcher.UIThread.Post(() => { botView.Content = bot.Content; },
+                                DispatcherPriority.Background);
                             isfirst = false;
                         }
                         else if (token == 10)
                         {
                             token = 0;
-                            Dispatcher.UIThread.Invoke(() =>
+                            Dispatcher.UIThread.Post(() =>
                             {
                                 botView.Content = bot.Content;
 
                                 ViewModel.OnMessageUpdated?.Invoke();
-                            });
+                            }, DispatcherPriority.Background);
                         }
                     }
                 }
                 finally
                 {
-                    Dispatcher.UIThread.Invoke(() =>
+                    Dispatcher.UIThread.Post(() =>
                     {
                         botView.Content = bot.Content;
                         ViewModel.OnMessageUpdated?.Invoke();
                         ViewModel.IsGenerating = false;
-                    });
+                    }, DispatcherPriority.Background);
                 }
 
                 await chatMessageRepository.InsertAsync(bot);
@@ -314,14 +314,27 @@ public partial class ChatInput : UserControl
             Avatar = "https://avatars.githubusercontent.com/u/10251060?v=4",
         };
 
-        ViewModel.Sessions.Add(session);
-        
-        ViewModel.Session = session;
+        var sessionView = new SessionsViewModel()
+        {
+            Id = session.Id,
+            Name = session.Name,
+            Description = session.Description,
+            System = session.System,
+            Model = session.Model,
+            MaxHistory = session.MaxHistory,
+            TopicModel = session.TopicModel,
+            Avatar = session.Avatar,
+            CreatedAt = DateTime.Now,
+        };
+
+        ViewModel.Sessions.Add(sessionView);
+
+        ViewModel.Session = sessionView;
 
         // 情况会话
         ViewModel.Messages.Clear();
         ViewModel.Files.Clear();
-        
+
 
         await sessionRepository.InsertAsync(session);
     }
@@ -330,33 +343,74 @@ public partial class ChatInput : UserControl
     /// 初始化Session
     /// </summary>
     /// <returns></returns>
-    private async Task InitSession()
+    private void InitSession()
     {
-        var sessions = (await sessionRepository.GetSessionsAsync()).OrderByDescending(x => x.CreatedAt);
-        var session = sessions
-            .FirstOrDefault();
-        if (session == null)
+        _ = Task.Run(async () =>
         {
-            session = new Session()
+            var sessions = (await sessionRepository.GetSessionsAsync()).OrderByDescending(x => x.CreatedAt);
+            var session = sessions
+                .FirstOrDefault();
+            SessionsViewModel sessionView;
+            if (session == null)
             {
-                Id = Guid.NewGuid().ToString(),
-                Name = I18nManager.Instance.GetResource(Localization.Controls.ChatInput.NewSessionTitle),
-                Description = "New Session",
-                System = "",
-                Model = ViewModel.ModelId?.Id ?? "gpt-4o-mini",
-                MaxHistory = -1,
-                TopicModel = "gpt-4o-mini",
-                Avatar = "https://avatars.githubusercontent.com/u/10251060?v=4",
-            };
+                session = new Session()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = I18nManager.Instance.GetResource(Localization.Controls.ChatInput.NewSessionTitle),
+                    Description = "New Session",
+                    System = "",
+                    Model = ViewModel.ModelId?.Id ?? "gpt-4o-mini",
+                    MaxHistory = -1,
+                    TopicModel = "gpt-4o-mini",
+                    Avatar = "https://avatars.githubusercontent.com/u/10251060?v=4",
+                };
 
-            await sessionRepository.InsertAsync(session);
-            
-            ViewModel.Sessions.Add(session);
-        }
-        else
-        {
-            ViewModel.Sessions = new ObservableCollection<Session>(sessions);
-        }
-        ViewModel.Session = session;
+                sessionView = new SessionsViewModel()
+                {
+                    Id = session.Id,
+                    Name = session.Name,
+                    Description = session.Description,
+                    System = session.System,
+                    Model = session.Model,
+                    MaxHistory = session.MaxHistory,
+                    TopicModel = session.TopicModel,
+                    Avatar = session.Avatar,
+                    CreatedAt = DateTime.Now,
+                };
+
+                await sessionRepository.InsertAsync(session);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    ViewModel.Sessions.Add(sessionView);
+                    ViewModel.Session = sessionView;
+                }, DispatcherPriority.MaxValue);
+            }
+            else
+            {
+                foreach (var s in sessions)
+                {
+                    var item = s;
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        ViewModel.Sessions.Add(new SessionsViewModel()
+                        {
+                            Id = item.Id,
+                            Name = item.Name,
+                            Description = item.Description,
+                            System = item.System,
+                            Model = item.Model,
+                            MaxHistory = item.MaxHistory,
+                            TopicModel = item.TopicModel,
+                            Avatar = item.Avatar,
+                            CreatedAt = item.CreatedAt,
+                        });
+                    }, DispatcherPriority.MaxValue);
+                }
+
+                Dispatcher.UIThread.Post(() => { ViewModel.Session = ViewModel.Sessions.FirstOrDefault(); },
+                    DispatcherPriority.Background);
+            }
+        });
     }
 }

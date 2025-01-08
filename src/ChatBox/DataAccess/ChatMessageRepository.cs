@@ -20,6 +20,10 @@ public class ChatMessageRepository(Lazy<DbContext> dbContext)
             new { content, id });
     }
 
+    /// <summary>
+    /// 删除会话的所有消息
+    /// </summary>
+    /// <param name="id"></param>
     public async Task DeleteSession(string id)
     {
         await dbContext.Value.GetConnection().ExecuteAsync(
@@ -48,12 +52,14 @@ public class ChatMessageRepository(Lazy<DbContext> dbContext)
                 $"SELECT * FROM ChatMessage WHERE SessionId = '{sessionId}' ORDER BY CreatedAt DESC LIMIT 1"))
             .FirstOrDefault();
     }
-    
+
     /// <summary>
     /// 重命名会话名称
     /// </summary>
-    public async Task UpdateSessionAsync(Session session)
+    public async Task UpdateSessionAsync(string id, string name)
     {
-        await dbContext.Value.UpdateAsync(session);
-    } 
+        await dbContext.Value.GetConnection().ExecuteAsync(
+            $"UPDATE {nameof(Session)} SET Name = @name WHERE Id = @id",
+            new { name, id });
+    }
 }

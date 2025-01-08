@@ -66,7 +66,8 @@ public class HostApplication
         logger.LogWarning(exception, message);
     }
 
-    public static IHost Builder()
+    public static IHost Builder(Action<IServiceCollection>
+        configureServices)
     {
         var host = new HostBuilder()
             .ConfigureServices((hostContext, services) =>
@@ -81,8 +82,10 @@ public class HostApplication
                     OperatingSystem.IsMacCatalyst() || OperatingSystem.IsLinux())
                 {
                     services.AddSingleton<MainWindow>();
-                    services.AddSingleton<IClipboard>(s => TopLevel.GetTopLevel(s.GetRequiredService<MainWindow>())!.Clipboard!);
-                    services.AddSingleton<ILauncher>(s => TopLevel.GetTopLevel(s.GetRequiredService<MainWindow>())!.Launcher);
+                    services.AddSingleton<IClipboard>(s =>
+                        TopLevel.GetTopLevel(s.GetRequiredService<MainWindow>())!.Clipboard!);
+                    services.AddSingleton<ILauncher>(s =>
+                        TopLevel.GetTopLevel(s.GetRequiredService<MainWindow>())!.Launcher);
                     services.AddSingleton<WindowNotificationManager>(s =>
                         new WindowNotificationManager(s.GetRequiredService<MainWindow>())
                         {
@@ -94,8 +97,10 @@ public class HostApplication
                 else
                 {
                     services.AddSingleton<MainView>();
-                    services.AddSingleton<IClipboard>(s => TopLevel.GetTopLevel(s.GetRequiredService<MainView>())!.Clipboard!);
-                    services.AddSingleton<ILauncher>(s => TopLevel.GetTopLevel(s.GetRequiredService<MainView>())!.Launcher);
+                    services.AddSingleton<IClipboard>(s =>
+                        TopLevel.GetTopLevel(s.GetRequiredService<MainView>())!.Clipboard!);
+                    services.AddSingleton<ILauncher>(s =>
+                        TopLevel.GetTopLevel(s.GetRequiredService<MainView>())!.Launcher);
                     services.AddSingleton<WindowNotificationManager>(s =>
                         new WindowNotificationManager(TopLevel.GetTopLevel(s.GetRequiredService<MainView>()))
                         {
@@ -132,7 +137,8 @@ public class HostApplication
 
                 services.AddSingleton<ChatMessageRepository>();
                 services.AddSingleton<SessionRepository>();
-                
+
+                configureServices(services);
             }).ConfigureLogging(logging =>
             {
                 logging.ClearProviders();

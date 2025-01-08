@@ -60,6 +60,7 @@
         <Border Padding="5" Grid.Row="3">
             <Grid ColumnDefinitions="Auto,*">
                 <Button
+                    Cursor="Hand"
                     Click="OpenFile">
                     <controls:SymbolIcon
                         Symbol="OpenFile" Width="15">
@@ -69,6 +70,7 @@
                       Grid.Column="1">
                     <ComboBox
                         VerticalAlignment="Center"
+                        Cursor="Hand"
                         IsEnabled="{Binding !IsGenerating}"
                         HorizontalAlignment="Right"
                         SelectedIndex="0"
@@ -89,6 +91,7 @@
                     </ComboBox>
                     <Button Grid.Column="1" Click="Submit"
                             VerticalAlignment="Center"
+                            Cursor="Hand"
                             HorizontalAlignment="Right"
                             IsEnabled="{Binding !IsGenerating}"
                             Background="Transparent"

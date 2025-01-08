@@ -60,6 +60,8 @@
 			<LanguageKey>语言</LanguageKey>
 			<LanguagePlaceholderText>选择一个语言</LanguagePlaceholderText>
 			<SaveButtonContent>保存</SaveButtonContent>
+			<AutoStart>设置开机自启动</AutoStart>
+			<ClosedAutoStart>关闭开机自启动</ClosedAutoStart>
 			<SaveSuccessNotificationTitle>保存成功</SaveSuccessNotificationTitle>
 			<SaveSuccessNotificationMessage>设置保存成功</SaveSuccessNotificationMessage>
 			<Logout>退出登录</Logout>

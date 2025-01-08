@@ -55,7 +55,9 @@ public partial class Setting : UserControl
         HostApplication.Services.GetService<ISettingService>()!.SaveSetting(setting);
 
         _notificationManager?.Show(
-            new Notification(I18nManager.Instance.GetResource(Localization.Pages.Setting.SaveSuccessNotificationTitle), I18nManager.Instance.GetResource(Localization.Pages.Setting.SaveSuccessNotificationMessage), NotificationType.Success));
+            new Notification(I18nManager.Instance.GetResource(Localization.Pages.Setting.SaveSuccessNotificationTitle),
+                I18nManager.Instance.GetResource(Localization.Pages.Setting.SaveSuccessNotificationMessage),
+                NotificationType.Success));
     }
 
     private void InitializeSetting()
@@ -71,6 +73,16 @@ public partial class Setting : UserControl
         var item = models.FirstOrDefault(x => x.Id == ViewModel.Setting.Type);
 
         ViewModel.SelectedModelProvider = item ?? models.FirstOrDefault();
+
+        // 获取当前应用程序是否存在系统开机
+        if (HostApplication.Services.GetService<IAutoStartService>()!.IsAutoStart())
+        {
+            ViewModel.IsAutoStart = true;
+        }
+        else
+        {
+            ViewModel.IsAutoStart = false;
+        }
     }
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -92,6 +104,24 @@ public partial class Setting : UserControl
         HostApplication.Services.GetRequiredService<ISettingService>().SaveSetting(settings);
 
         HostApplication.Logout?.Invoke();
+    }
 
+    private void ToggleAutoStart(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.IsAutoStart)
+        {
+            HostApplication.Services.GetService<IAutoStartService>()!.SetAutoStart(false);
+            ViewModel.IsAutoStart = false;
+        }
+        else
+        {
+            HostApplication.Services.GetService<IAutoStartService>()!.SetAutoStart(true);
+            ViewModel.IsAutoStart = true;
+        }
+        
+        _notificationManager?.Show(
+            new Notification("设置成功",
+                "设置成功",
+                NotificationType.Success));
     }
 }

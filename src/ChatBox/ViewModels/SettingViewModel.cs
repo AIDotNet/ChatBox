@@ -37,6 +37,17 @@ public class SettingViewModel : ViewModelBase
         get => _modelProvider;
         set => SetProperty(ref _modelProvider, value);
     }
+    
+    /// <summary>
+    /// 是否存在开机启动
+    /// </summary>
+    private bool _isAutoStart;
+    
+    public bool IsAutoStart
+    {
+        get => _isAutoStart;
+        set => SetProperty(ref _isAutoStart, value);
+    }
 
     public ObservableCollection<LocalizationLanguage> Languages { get; private set; }
 

@@ -60,6 +60,8 @@
 			<LanguageKey>言語</LanguageKey>
 			<LanguagePlaceholderText>言語を選択してください。</LanguagePlaceholderText>
 			<SaveButtonContent>保存</SaveButtonContent>
+			<AutoStart>自動起動を設定する</AutoStart>
+			<ClosedAutoStart>自動起動を無効にする</ClosedAutoStart>
 			<SaveSuccessNotificationTitle>保存に成功しました</SaveSuccessNotificationTitle>
 			<SaveSuccessNotificationMessage>設定の保存に成功しました</SaveSuccessNotificationMessage>
 			<Logout>ログアウト</Logout>

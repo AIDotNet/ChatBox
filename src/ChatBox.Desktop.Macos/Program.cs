@@ -13,7 +13,10 @@ static class Program
         try
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledException;
-            HostApplication.Builder();
+            HostApplication.Builder((services) =>
+            {
+                services.AddSingleton<IAutoStartService, MacisAutoStartService>();
+            });
             NSApplication.Init();
             NSApplication.SharedApplication.Delegate = new AppDelegate();
             NSApplication.Main(args);

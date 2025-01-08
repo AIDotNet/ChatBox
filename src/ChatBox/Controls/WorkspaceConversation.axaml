@@ -5,6 +5,7 @@
              xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
              xmlns:controls="clr-namespace:ChatBox.Controls"
              xmlns:models="clr-namespace:ChatBox.Models"
+             xmlns:controls1="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ChatBox.Controls.WorkspaceConversation"
              x:DataType="viewModels:ChatViewModel">
@@ -18,11 +19,18 @@
 
     <Grid
         ColumnDefinitions="*">
+        <controls1:ProgressRing 
+            IsVisible="{Binding IsSessionLoading}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Width="40" Height="40" />
         <ScrollViewer
             Name="ScrollViewer"
             VerticalScrollBarVisibility="Auto"
             HorizontalScrollBarVisibility="Disabled">
+
             <ItemsControl
+                IsVisible="{Binding !IsSessionLoading}"
                 ItemsSource="{Binding Messages}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -44,7 +52,7 @@
                                                    OkClicked="ChatEdit_OnOkClicked"
                                                    CancelClicked="ChatEdit_OnCancelClicked"
                                                    Margin="16"
-                                                   DataContext="{Binding This}"/>
+                                                   DataContext="{Binding This}" />
                                 <controls:Avatar Grid.Column="1" Source="../Assets/favicon.ico" />
                             </Grid>
                             <Grid
@@ -76,7 +84,9 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <controls:ChatWelcome IsVisible="{Binding WelcomeVisible}" />
+        <controls:ChatWelcome 
+            
+            IsVisible="{Binding WelcomeVisible}" />
     </Grid>
 
 </UserControl>

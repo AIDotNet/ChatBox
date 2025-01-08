@@ -100,6 +100,8 @@ namespace Localization.Pages
         public static readonly string LanguageKey = "Localization.Pages.Setting.LanguageKey";
         public static readonly string LanguagePlaceholderText = "Localization.Pages.Setting.LanguagePlaceholderText";
         public static readonly string SaveButtonContent = "Localization.Pages.Setting.SaveButtonContent";
+        public static readonly string ClosedAutoStart = "Localization.Pages.Setting.ClosedAutoStart";
+        public static readonly string AutoStart = "Localization.Pages.Setting.AutoStart";
         public static readonly string SaveSuccessNotificationTitle = "Localization.Pages.Setting.SaveSuccessNotificationTitle";
         public static readonly string SaveSuccessNotificationMessage = "Localization.Pages.Setting.SaveSuccessNotificationMessage";
         public static readonly string Logout = "Localization.Pages.Setting.Logout";

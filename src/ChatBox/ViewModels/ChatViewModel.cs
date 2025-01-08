@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia.Threading;
 using ChatBox.Internal;
 using ChatBox.Models;
 
@@ -9,6 +10,10 @@ namespace ChatBox.ViewModels;
 
 public class ChatViewModel : ModelListViewModel
 {
+    private DispatcherTimer _updateTimer;
+
+    private bool _isUpdating;
+
     public ChatViewModel()
     {
         Messages.CollectionChanged += (sender, args) =>
@@ -22,7 +27,7 @@ public class ChatViewModel : ModelListViewModel
                 WelcomeVisible = true;
             }
 
-            CalculateToken();
+            StartUpdateTimer();
         };
 
         CurrentModel = ModelList.FirstOrDefault();
@@ -48,15 +53,15 @@ public class ChatViewModel : ModelListViewModel
         set
         {
             SetProperty(ref _message, value);
-            CalculateToken();
+            StartUpdateTimer();
         }
     }
 
     public event EventHandler<string>? SessionChanged;
 
-    private Session _session;
+    private SessionsViewModel _session;
 
-    public Session Session
+    public SessionsViewModel Session
     {
         get => _session;
         set
@@ -66,12 +71,28 @@ public class ChatViewModel : ModelListViewModel
         }
     }
 
-    private ObservableCollection<Session> _sessions = new();
+    private ObservableCollection<SessionsViewModel> _sessions = new();
 
-    public ObservableCollection<Session> Sessions
+    public ObservableCollection<SessionsViewModel> Sessions
     {
         get => _sessions;
         set => SetProperty(ref _sessions, value);
+    }
+
+    /// <summary>
+    /// 加载Session
+    /// </summary>
+    /// <returns></returns>
+    private bool _isSessionLoading;
+
+    public bool IsSessionLoading
+    {
+        get => _isSessionLoading;
+        set
+        {
+            SetProperty(ref _isSessionLoading, value);
+            WelcomeVisible = !value;
+        }
     }
 
     private ObservableCollection<ChatMessageListViewModel> _messages = new();
@@ -121,19 +142,49 @@ public class ChatViewModel : ModelListViewModel
         set => SetProperty(ref _token, value);
     }
 
-
-    /// <summary>
-    /// 计算token
-    /// </summary>
-    public void CalculateToken()
+    private void StartUpdateTimer()
     {
-        var token = 0;
-        foreach (var s in Messages.Where(x => !string.IsNullOrEmpty(x.Content)).Select(x => x.Content).ToArray())
+        if (_updateTimer == null)
         {
-            token += TokenHelper.GetTotalTokens(s);
+            _updateTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(2),
+            };
+            _updateTimer.Tick += (sender, args) => CalculateToken();
         }
 
-        Token = token + TokenHelper.GetTotalTokens(Message);
+        if (!_updateTimer.IsEnabled)
+        {
+            _updateTimer.Start();
+        }
+    }
+
+    private void CalculateToken()
+    {
+        if (_isUpdating)
+        {
+            return;
+        }
+
+        _isUpdating = true;
+
+        _ = Task.Run(async () =>
+        {
+            var token = Messages.Where(x => !string.IsNullOrEmpty(x.Content)).Select(x => x.Content).ToArray()
+                .Sum(s => TokenHelper.GetTotalTokens(s));
+
+            token += TokenHelper.GetTotalTokens(Message);
+
+            await Dispatcher.UIThread.InvokeAsync(() => Token = token);
+
+            _isUpdating = false;
+
+            // Stop the timer if no updates are detected
+            if (Messages.All(x => string.IsNullOrEmpty(x.Content)) && string.IsNullOrEmpty(Message))
+            {
+                _updateTimer.Stop();
+            }
+        });
     }
 
     /// <summary>

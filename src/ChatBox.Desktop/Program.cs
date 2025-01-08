@@ -1,10 +1,12 @@
 ﻿using Avalonia;
 using System;
+using ChatBox.Desktop.Services;
 using ChatBox.Service;
 using Microsoft.Extensions.DependencyInjection;
 #if DEBUG
 using Nlnet.Avalonia.DevTools;
 #endif
+
 namespace ChatBox.Desktop;
 
 sealed class Program
@@ -14,8 +16,10 @@ sealed class Program
     {
         try
         {
-
-            HostApplication.Builder();
+            HostApplication.Builder((services) =>
+            {
+                services.AddSingleton<IAutoStartService, WindowAutoStartService>();
+            });
 
 
             CrossPlatformCustomProtocolHelper.RegisterCustomProtocol();

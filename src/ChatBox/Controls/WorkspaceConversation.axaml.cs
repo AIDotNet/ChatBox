@@ -44,42 +44,52 @@ public partial class WorkspaceConversation : UserControl
         }
 
         // 监听IsSelected属性变化
-        ViewModel.SessionChanged += async (sender, args) =>
-        {
-            await LoadChatMessage();
-
-            ScrollViewer.ScrollToEnd();
-        };
+        ViewModel.SessionChanged += async (sender, args) => { LoadChatMessage(); };
     }
 
-    private async Task LoadChatMessage(string? sessionId = null)
+    private void LoadChatMessage(string? sessionId = null)
     {
         ViewModel.Messages.Clear();
-        foreach (var message in await _chatMessageRepository.GetMessagesAsync(sessionId ?? ViewModel.Session.Id))
+        ViewModel.IsSessionLoading = true;
+        sessionId ??= ViewModel.Session.Id;
+
+        _ = Task.Run(async () =>
         {
-            ViewModel.Messages.Add(new ChatMessageListViewModel()
+            foreach (var item in await _chatMessageRepository.GetMessagesAsync(sessionId))
             {
-                Id = message.Id,
-                Content = message.Content,
-                CreatedAt = message.CreatedAt,
-                IsEditing = false,
-                Meta = message.Meta,
-                Plugin = message.Plugin,
-                Role = message.Role,
-                SessionId = message.SessionId,
-                UpdatedAt = message.UpdatedAt,
-            });
-        }
+                var message = item;
+                Dispatcher.UIThread.Post(() =>
+                {
+                    ViewModel.Messages.Add(new ChatMessageListViewModel()
+                    {
+                        Id = message.Id,
+                        Content = message.Content,
+                        CreatedAt = message.CreatedAt,
+                        IsEditing = false,
+                        Meta = message.Meta,
+                        Plugin = message.Plugin,
+                        Role = message.Role,
+                        SessionId = message.SessionId,
+                        UpdatedAt = message.UpdatedAt,
+                    });
+                }, DispatcherPriority.Render);
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                ViewModel.IsSessionLoading = false;
+                ScrollViewer.ScrollToEnd();
+                
+                // 如果是新会话，发送欢迎消息
+                ViewModel.WelcomeVisible = ViewModel.Messages.Count == 0;
+                
+            }, DispatcherPriority.Background);
+        });
     }
 
     private void ViewModel_OnMessageUpdated()
     {
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            ScrollViewer.ScrollToEnd();
-
-            ViewModel.CalculateToken();
-        });
+        Dispatcher.UIThread.Post(() => { ScrollViewer.ScrollToEnd(); }, DispatcherPriority.Background);
     }
 
     private ChatViewModel ViewModel => (ChatViewModel)DataContext;
@@ -223,11 +233,11 @@ public partial class WorkspaceConversation : UserControl
                         {
                             if (isfirst)
                             {
-                                Dispatcher.UIThread.Invoke(() =>
+                                Dispatcher.UIThread.Post(() =>
                                 {
                                     bot.Content = string.Empty;
                                     botView.Content = string.Empty;
-                                });
+                                }, DispatcherPriority.Background);
                             }
 
                             foreach (var x in item.Items)
@@ -271,29 +281,30 @@ public partial class WorkspaceConversation : UserControl
                             token++;
                             if (token == 5 || isfirst)
                             {
-                                await Dispatcher.UIThread.InvokeAsync(() => { botView.Content = bot.Content; });
+                                Dispatcher.UIThread.Post(() => { botView.Content = bot.Content; },
+                                    DispatcherPriority.Background);
                                 isfirst = false;
                             }
                             else if (token == 10)
                             {
                                 token = 0;
-                                await Dispatcher.UIThread.InvokeAsync(() =>
+                                Dispatcher.UIThread.Post(() =>
                                 {
                                     botView.Content = bot.Content;
-
                                     ViewModel.OnMessageUpdated?.Invoke();
-                                });
+                                }, DispatcherPriority.Background);
                             }
                         }
                     }
                     finally
                     {
-                        await Dispatcher.UIThread.InvokeAsync(() =>
+                        Dispatcher.UIThread.Post(() =>
                         {
                             botView.Content = bot.Content;
                             ViewModel.OnMessageUpdated?.Invoke();
                             ViewModel.IsGenerating = false;
-                        });
+                        }, DispatcherPriority.Background);
+
                         await _chatMessageRepository.InsertAsync(bot);
                     }
                 });

@@ -59,6 +59,8 @@
 			<MaxTokenLabel>最大 Token:</MaxTokenLabel>
 			<LanguageKey>語言</LanguageKey>
 			<LanguagePlaceholderText>選擇一個語言</LanguagePlaceholderText>
+			<AutoStart>設置開機自啓動</AutoStart>
+			<ClosedAutoStart>關閉開機自啓動</ClosedAutoStart>
 			<SaveButtonContent>保存</SaveButtonContent>
 			<SaveSuccessNotificationTitle>保存成功</SaveSuccessNotificationTitle>
 			<SaveSuccessNotificationMessage>設定保存成功</SaveSuccessNotificationMessage>

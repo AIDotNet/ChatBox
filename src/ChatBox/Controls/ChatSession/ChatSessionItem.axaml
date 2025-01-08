@@ -8,11 +8,12 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:markup="https://codewf.com"
              xmlns:language="clr-namespace:Localization.Controls"
+             xmlns:viewModels="clr-namespace:ChatBox.ViewModels"
              x:Class="ChatBox.Controls.ChatSession.ChatSessionItem"
-             x:DataType="models:Session">
+             x:DataType="viewModels:SessionsViewModel">
 
     <Design.DataContext>
-        <models:Session />
+        <viewModels:SessionsViewModel />
     </Design.DataContext>
 
     <Border
@@ -21,6 +22,8 @@
             ColumnDefinitions="Auto,*,Auto">
             <Border Width="50"
                     Height="50"
+                    Background="Transparent"
+                    Cursor="Hand"
                     Tapped="Border_OnTapped"
                     Margin="0,0,5,5"
                     CornerRadius="50"
@@ -29,9 +32,12 @@
             </Border>
             <StackPanel
                 Tapped="Border_OnTapped"
+                Background="Transparent"
+                Cursor="Hand"
                 Grid.Column="1">
                 <TextBlock
-                    FontSize="16"
+                    FontSize="14"
+                    ToolTip.Tip="{Binding Name}"
                     Text="{Binding Name}">
                 </TextBlock>
                 <TextBlock
@@ -47,6 +53,7 @@
                     BorderThickness="0"
                     Height="25"
                     Width="25"
+                    Cursor="Hand"
                     Padding="3"
                     Margin="5,15,5,5">
                     <lucideAvalonia:Lucide Icon="Ellipsis"
@@ -61,7 +68,9 @@
                                 Click="RenameSession_Click"
                                 Header="{markup:I18n {x:Static language:ChatSession.ChatRenameSession}}" />
                             <MenuItem Header="{markup:I18n {x:Static language:ChatSession.ChatEditSession}}" />
-                            <MenuItem Header="{markup:I18n {x:Static language:ChatSession.ChatDeleteSession}}" />
+                            <MenuItem 
+                                Click="DeleteSession_Click"
+                                Header="{markup:I18n {x:Static language:ChatSession.ChatDeleteSession}}" />
                         </MenuFlyout>
                     </Button.Flyout>
                 </Button>

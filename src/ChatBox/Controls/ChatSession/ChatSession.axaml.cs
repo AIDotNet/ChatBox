@@ -1,8 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using ChatBox.Models;
+﻿using Avalonia.Interactivity;
 
 namespace ChatBox.Controls.ChatSession;
 
@@ -17,7 +13,7 @@ public partial class ChatSession : UserControl
 
     private void ChatSessionItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is ChatSessionItem chatSessionItem && chatSessionItem.DataContext is Session session)
+        if (sender is ChatSessionItem { DataContext: SessionsViewModel session })
         {
             ViewModel.Session = session;
         }

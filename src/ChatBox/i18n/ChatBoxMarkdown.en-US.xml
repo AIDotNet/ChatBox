@@ -62,6 +62,9 @@
 			<SaveButtonContent>Save</SaveButtonContent>
 			<SaveSuccessNotificationTitle>Save successfully</SaveSuccessNotificationTitle>
 			<SaveSuccessNotificationMessage>Settings saved successfully</SaveSuccessNotificationMessage>
+			<AutoStart>Set Auto Start</AutoStart>
+			<ClosedAutoStart>Disable Auto Start</ClosedAutoStart>
+			
 			<Logout>Log out</Logout>
 		</Setting>
 		<Tool>

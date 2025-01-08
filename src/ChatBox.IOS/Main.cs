@@ -1,3 +1,4 @@
+using ChatBox.Service;
 using Microsoft.Extensions.DependencyInjection;
 using UIKit;
 
@@ -10,7 +11,10 @@ public class Application
     {
         // if you want to use a different Application Delegate class from "AppDelegate"
         // you can specify it here.
-        HostApplication.Builder();
+        HostApplication.Builder((collection =>
+        {
+            collection.AddSingleton<IAutoStartService, NullAutoStartService>();
+        }));
         UIApplication.Main(args, null, typeof(AppDelegate));
     }
 }
