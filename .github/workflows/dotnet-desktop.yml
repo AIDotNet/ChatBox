@@ -41,7 +41,7 @@ jobs:
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      run: dotnet publish src/ChatBox.Desktop/ChatBox.Desktop.csproj -c Release --os win --output ${{ env.Wap_Project_Directory }}\AppPackages  -p:PublishSingleFile=true --self-contained false
+      run: dotnet publish ./Data/DataBackup/DataBackup.csproj -c Release -f net9.0-windows --os win --output E:\BaseOS\Tools\Data\DataBackup\ -p:PublishSingleFile=true --self-contained false
       env:
         Appx_Bundle: Always
         Appx_Bundle_Platforms: x86|x64
